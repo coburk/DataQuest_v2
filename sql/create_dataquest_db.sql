@@ -1,5 +1,6 @@
 -- Create DataQuest database
 -- This script creates the initial database schema for DataQuest: SQL Detective
+-- Schema follows the Data Dictionary defined in docs/design-and-planning/
 
 -- Use master database to create the new database
 USE master;
@@ -23,138 +24,170 @@ USE DataQuest;
 GO
 
 -- ============================================================
--- Core Investigative Tables
+-- CORE INVESTIGATIVE ENTITIES
 -- ============================================================
 
--- Create Person table
-CREATE TABLE [dbo].[Person] (
-    [PersonId] INT PRIMARY KEY IDENTITY(1,1),
-    [FirstName] NVARCHAR(100) NOT NULL,
-    [LastName] NVARCHAR(100) NOT NULL,
-    [Gender] CHAR(1) NULL,
-    [DateOfBirth] DATE NULL,
-    [Occupation] NVARCHAR(100) NULL,
-    [PhoneNumber] NVARCHAR(20) NULL,
-    [EmailAddress] NVARCHAR(100) NULL,
+-- Create Cases table
+-- Represents investigation narratives that students solve
+CREATE TABLE [dbo].[Cases] (
+    [CaseID] INT PRIMARY KEY IDENTITY(1,1),
+    [CaseTitle] VARCHAR(100) NOT NULL,
+    [InitialPrompt] VARCHAR(MAX) NOT NULL,
+    [Conclusion] VARCHAR(MAX) NULL,
     [CreatedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [ModifiedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE()
 );
 GO
 
--- Create Location table
-CREATE TABLE [dbo].[Location] (
-    [LocationId] INT PRIMARY KEY IDENTITY(1,1),
-    [LocationName] NVARCHAR(200) NOT NULL,
-    [Address] NVARCHAR(300) NULL,
-    [City] NVARCHAR(100) NULL,
-    [State] NVARCHAR(50) NULL,
-    [ZipCode] NVARCHAR(20) NULL,
-    [LocationType] NVARCHAR(50) NULL,
-    [Description] NVARCHAR(MAX) NULL,
+-- Create Persons table
+-- Represents individuals involved in cases (suspects, witnesses, victims)
+CREATE TABLE [dbo].[Persons] (
+    [PersonID] INT PRIMARY KEY IDENTITY(1,1),
+    [Name] VARCHAR(50) NOT NULL,
+    [Role] VARCHAR(50) NOT NULL, -- 'Suspect', 'Witness', 'Victim', 'Investigator'
+    [IsSuspect] BIT NOT NULL DEFAULT 0,
+[CreatedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+    [ModifiedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE()
+);
+GO
+
+-- Create Locations table
+-- Represents physical places relevant to investigations
+CREATE TABLE [dbo].[Locations] (
+    [LocationID] INT PRIMARY KEY IDENTITY(1,1),
+    [Name] VARCHAR(100) NOT NULL,
+    [Address] VARCHAR(255) NOT NULL,
     [CreatedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [ModifiedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE()
 );
 GO
+
+-- Create Relationships table
+-- Represents connections between persons (coworker, sibling, etc.)
+CREATE TABLE [dbo].[Relationships] (
+    [RelationshipID] INT PRIMARY KEY IDENTITY(1,1),
+    [PersonID_A] INT NOT NULL,
+[PersonID_B] INT NOT NULL,
+    [Type] VARCHAR(50) NOT NULL, -- 'Coworker', 'Sibling', 'Acquaintance', 'Friend', 'Employer'
+    [CreatedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+    [ModifiedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+    FOREIGN KEY ([PersonID_A]) REFERENCES [dbo].[Persons]([PersonID]),
+    FOREIGN KEY ([PersonID_B]) REFERENCES [dbo].[Persons]([PersonID]),
+    CONSTRAINT CHK_Different_Persons CHECK ([PersonID_A] <> [PersonID_B])
+);
+GO
+
+-- ============================================================
+-- EVIDENCE AND LOG DATA
+-- ============================================================
 
 -- Create Evidence table
+-- Represents physical or digital evidence in a case
 CREATE TABLE [dbo].[Evidence] (
-    [EvidenceId] INT PRIMARY KEY IDENTITY(1,1),
-    [EvidenceDescription] NVARCHAR(MAX) NOT NULL,
-    [EvidenceType] NVARCHAR(100) NOT NULL,
-    [FoundLocation] INT NULL,
-    [FoundDate] DATETIME2 NULL,
-    [Chain] NVARCHAR(500) NULL,
-  [CreatedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+    [EvidenceID] INT PRIMARY KEY IDENTITY(1,1),
+    [CaseID] INT NOT NULL,
+    [LocationID] INT NULL,
+    [Type] VARCHAR(50) NOT NULL, -- 'CCTV_Log', 'Financial_Record', 'Email', 'Physical'
+    [TimestampFound] DATETIME2 NOT NULL,
+    [CreatedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [ModifiedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
-    FOREIGN KEY ([FoundLocation]) REFERENCES [dbo].[Location]([LocationId])
+    FOREIGN KEY ([CaseID]) REFERENCES [dbo].[Cases]([CaseID]),
+    FOREIGN KEY ([LocationID]) REFERENCES [dbo].[Locations]([LocationID])
 );
 GO
 
--- Create Communication table
-CREATE TABLE [dbo].[Communication] (
-    [CommunicationId] INT PRIMARY KEY IDENTITY(1,1),
-    [FromPersonId] INT NOT NULL,
-    [ToPersonId] INT NOT NULL,
-    [CommunicationType] NVARCHAR(50) NOT NULL, -- 'Phone', 'Email', 'Message', 'Meeting'
-    [CommunicationDateTime] DATETIME2 NOT NULL,
-    [MessageContent] NVARCHAR(MAX) NULL,
-    [Duration] INT NULL, -- in seconds
-    [Location] INT NULL,
+-- Create WitnessStatements table
+-- Represents narrative accounts from people involved in cases
+CREATE TABLE [dbo].[WitnessStatements] (
+    [StatementID] INT PRIMARY KEY IDENTITY(1,1),
+    [CaseID] INT NOT NULL,
+    [PersonID] INT NOT NULL,
+    [StatementText] VARCHAR(MAX) NOT NULL,
     [CreatedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [ModifiedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
-    FOREIGN KEY ([FromPersonId]) REFERENCES [dbo].[Person]([PersonId]),
-    FOREIGN KEY ([ToPersonId]) REFERENCES [dbo].[Person]([PersonId]),
-    FOREIGN KEY ([Location]) REFERENCES [dbo].[Location]([LocationId])
+    FOREIGN KEY ([CaseID]) REFERENCES [dbo].[Cases]([CaseID]),
+    FOREIGN KEY ([PersonID]) REFERENCES [dbo].[Persons]([PersonID])
+);
+GO
+
+-- Create TransactionLogs table
+-- Represents events, access logs, financial transactions, etc. for timeline building
+CREATE TABLE [dbo].[TransactionLogs] (
+    [LogID] INT PRIMARY KEY IDENTITY(1,1),
+    [PersonID] INT NULL,
+    [Timestamp] DATETIME2 NOT NULL,
+    [Amount] DECIMAL(10, 2) NULL,
+    [CreatedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+    [ModifiedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+    FOREIGN KEY ([PersonID]) REFERENCES [dbo].[Persons]([PersonID])
 );
 GO
 
 -- ============================================================
--- Case Management Tables
+-- AI AND TUTORING CONTROL
 -- ============================================================
 
--- Create Case table
-CREATE TABLE [dbo].[Case] (
-  [CaseId] INT PRIMARY KEY IDENTITY(1,1),
-    [CaseName] NVARCHAR(200) NOT NULL,
-[CaseDescription] NVARCHAR(MAX) NULL,
-    [CaseStatus] NVARCHAR(50) NOT NULL, -- 'Draft', 'Active', 'Completed', 'Archived'
- [Difficulty] NVARCHAR(50) NULL, -- 'Beginner', 'Intermediate', 'Advanced'
-    [CreatedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
-    [ModifiedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE()
-);
-GO
-
--- Create CaseStep table
-CREATE TABLE [dbo].[CaseStep] (
-    [CaseStepId] INT PRIMARY KEY IDENTITY(1,1),
-    [CaseId] INT NOT NULL,
+-- Create StorySteps table
+-- Represents sequential investigation steps within a case
+CREATE TABLE [dbo].[StorySteps] (
+    [StepID] INT PRIMARY KEY IDENTITY(1,1),
+    [CaseID] INT NOT NULL,
     [StepNumber] INT NOT NULL,
-    [StepTitle] NVARCHAR(200) NOT NULL,
-    [StepDescription] NVARCHAR(MAX) NULL,
-    [StepType] NVARCHAR(50) NOT NULL, -- 'Investigation', 'Conclusion', 'Evidence', 'Timeline'
+    [StepPrompt] VARCHAR(MAX) NOT NULL,
+    [CanonicalQuery] VARCHAR(MAX) NOT NULL,
     [CreatedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [ModifiedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
-FOREIGN KEY ([CaseId]) REFERENCES [dbo].[Case]([CaseId]),
-  UNIQUE ([CaseId], [StepNumber])
+    FOREIGN KEY ([CaseID]) REFERENCES [dbo].[Cases]([CaseID]),
+    UNIQUE ([CaseID], [StepNumber])
 );
 GO
 
--- ============================================================
--- Query Management Tables
--- ============================================================
-
--- Create StudentQuery table
-CREATE TABLE [dbo].[StudentQuery] (
-    [QueryId] INT PRIMARY KEY IDENTITY(1,1),
-    [CaseId] INT NOT NULL,
-    [CaseStepId] INT NOT NULL,
-  [StudentId] NVARCHAR(100) NOT NULL,
-    [QueryText] NVARCHAR(MAX) NOT NULL,
-    [SubmittedDateTime] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
-    [HintLevel] INT NULL DEFAULT 0,
-    [IsCorrect] BIT NULL,
+-- Create AnswerKeys table
+-- Represents the canonical solutions and expected results for each step
+CREATE TABLE [dbo].[AnswerKeys] (
+    [AnswerKeyID] INT PRIMARY KEY IDENTITY(1,1),
+    [StepID] INT NOT NULL,
+    [ExpectedResultHash] VARCHAR(64) NOT NULL,
+    [ExpectedClueValue] VARCHAR(MAX) NOT NULL,
     [CreatedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
-FOREIGN KEY ([CaseId]) REFERENCES [dbo].[Case]([CaseId]),
-    FOREIGN KEY ([CaseStepId]) REFERENCES [dbo].[CaseStep]([CaseStepId])
+    [ModifiedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+    FOREIGN KEY ([StepID]) REFERENCES [dbo].[StorySteps]([StepID]),
+    UNIQUE ([StepID])
 );
 GO
 
 -- ============================================================
--- Indexes
+-- INDEXES FOR PERFORMANCE
 -- ============================================================
 
--- Create indexes for common queries
-CREATE INDEX IDX_Person_Name ON [dbo].[Person]([LastName], [FirstName]);
-CREATE INDEX IDX_Location_Name ON [dbo].[Location]([LocationName]);
-CREATE INDEX IDX_Evidence_Type ON [dbo].[Evidence]([EvidenceType]);
-CREATE INDEX IDX_Communication_DateTime ON [dbo].[Communication]([CommunicationDateTime]);
-CREATE INDEX IDX_Communication_Persons ON [dbo].[Communication]([FromPersonId], [ToPersonId]);
-CREATE INDEX IDX_Case_Status ON [dbo].[Case]([CaseStatus]);
-CREATE INDEX IDX_CaseStep_CaseId ON [dbo].[CaseStep]([CaseId]);
-CREATE INDEX IDX_StudentQuery_CaseId ON [dbo].[StudentQuery]([CaseId], [StudentId]);
+-- Person/Relationship lookups
+CREATE INDEX IDX_Persons_Name ON [dbo].[Persons]([Name]);
+CREATE INDEX IDX_Relationships_PersonA ON [dbo].[Relationships]([PersonID_A]);
+CREATE INDEX IDX_Relationships_PersonB ON [dbo].[Relationships]([PersonID_B]);
+
+-- Location lookups
+CREATE INDEX IDX_Locations_Name ON [dbo].[Locations]([Name]);
+CREATE INDEX IDX_Locations_Address ON [dbo].[Locations]([Address]);
+
+-- Evidence and logs
+CREATE INDEX IDX_Evidence_CaseID ON [dbo].[Evidence]([CaseID]);
+CREATE INDEX IDX_Evidence_Type ON [dbo].[Evidence]([Type]);
+CREATE INDEX IDX_Evidence_Timestamp ON [dbo].[Evidence]([TimestampFound]);
+
+-- Witness and statement lookups
+CREATE INDEX IDX_WitnessStatements_CaseID ON [dbo].[WitnessStatements]([CaseID]);
+CREATE INDEX IDX_WitnessStatements_PersonID ON [dbo].[WitnessStatements]([PersonID]);
+
+-- Transaction logs and timelines
+CREATE INDEX IDX_TransactionLogs_PersonID ON [dbo].[TransactionLogs]([PersonID]);
+CREATE INDEX IDX_TransactionLogs_Timestamp ON [dbo].[TransactionLogs]([Timestamp]);
+
+-- Story steps and answers
+CREATE INDEX IDX_StorySteps_CaseID ON [dbo].[StorySteps]([CaseID]);
+CREATE INDEX IDX_AnswerKeys_StepID ON [dbo].[AnswerKeys]([StepID]);
 
 GO
 
 -- ============================================================
--- Schema created successfully
+-- Schema created successfully - Data Dictionary compliant
 -- ============================================================
