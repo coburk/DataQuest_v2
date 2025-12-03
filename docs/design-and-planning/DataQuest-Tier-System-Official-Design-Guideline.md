@@ -892,46 +892,529 @@ TIER SYSTEM QA CHECKLIST:
 
 ---
 
-## ✅ Enforcement Rules
+## 📉 Implementation Risks
 
-### Mandatory Rules
+### Potential Risks
+
+1. **Design Misalignment**
+   - Risk: Cases or UI elements don't match tier design principles
+   - Mitigation: Comprehensive design review and testing
+
+2. **Technical Constraints**
+   - Risk: Database or UI limitations hinder implementation
+   - Mitigation: Early identification of technical challenges, iterative development
+
+3. **Data Privacy Concerns**
+   - Risk: User tracking conflicts with privacy standards (e.g., FERPA)
+   - Mitigation: Implement anonymous usage tracking, avoid personal data collection
+
+4. **Insufficient Testing**
+   - Risk: Incomplete testing leads to undetected issues
+   - Mitigation: Thorough QA checklist and testing before each phase release
+
+5. **Scope Creep**
+   - Risk: Additional features or cases requested beyond initial plan
+   - Mitigation: Strict adherence to defined phase deliverables, change control process
+
+6. **Lack of Stakeholder Buy-in**
+   - Risk: Stakeholders不支持 or理解 approvals delayed
+   - Mitigation: Regular updates and demonstrations to stakeholders, gather feedback early
+
+---
+
+## 🔄 Implementation Timeline
+
+### Phase 1 (MVP): Tier System Demonstration
+
+**Duration:** Weeks 1-4  
+**Status:** Foundation  
+**Primary Focus:** Demonstrate tier system design and pedagogical approach
+
+**Deliverables:**
+- ✅ 3 demonstration cases (one representing each tier level)
+- ✅ Tier system design concepts shown visually
+- ✅ Tier names used consistently in UI
+- ✅ Achievement badge mockups/concepts
+- ✅ Promotion message templates
+- ❌ No user tracking (intentional)
+- ❌ No persistent progression (stateless design)
+
+**User Experience:**
+```
+Student Flow (MVP):
+├─ Click "Start DataQuest"
+├─ Get session ID
+├─ View case options
+├─ Select and complete case
+├─ See promotion concept message
+├─ Session ends
+└─ Next visit = fresh start
+```
+
+**Acceptable MVP Limitation:**
+```
+"DataQuest MVP v1.0: Tier System Demonstration
+
+This version demonstrates our innovative tier progression system
+and the pedagogical approach behind DataQuest.
+
+Progress tracking will be implemented in Phase 2."
+```
+
+**Success Criteria:**
+- ✅ Tier system design is clear and engaging
+- ✅ Case quality demonstrates pedagogical approach
+- ✅ Stakeholders understand full vision
+- ✅ Student feedback is positive on concept
+- ✅ Ready for Phase 2 expansion
+
+---
+
+### Phase 2: Full Tier Progression System
+
+**Duration:** Weeks 5-12  
+**Status:** Complete system  
+**Primary Focus:** Implement user tracking and tier progression
+
+**HIGH PRIORITY DELIVERABLES:**
+1. ⭐⭐⭐ **User tracking system** (CRITICAL)
+   - User session management
+   - Progress persistence
+ - Case completion tracking
+   - Tier assignment tracking
+   - Achievement recording
+
+2. ⭐⭐⭐ **Case library expansion** (CRITICAL)
+   - 12-15 total cases across all tiers
+   - 3 Junior Data Analyst cases
+   - 4 Senior Data Analyst cases
+   - 5 Data Inspector cases
+   - 3 Data Detective cases
+   - 0 Director of Data Integrity cases (save for Phase 3)
+
+3. ⭐⭐ **Tier progression system**
+   - Tier advancement logic
+   - Tier-locked case enforcement
+   - Progression calculation
+
+4. ⭐⭐ **Achievement system** (Functional)
+   - Badge awarding logic
+   - Promotion notifications
+   - Career progression display
+
+**Database Schema (Phase 2):**
+```sql
+-- User Identity (minimal, anonymous)
+CREATE TABLE [dbo].[Users] (
+    [UserID] UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    [SessionToken] VARCHAR(255) NOT NULL UNIQUE,
+    [CreatedDate] DATETIME2 DEFAULT GETUTCDATE(),
+    [LastActivityDate] DATETIME2
+);
+
+-- Progress Tracking
+CREATE TABLE [dbo].[UserProgress] (
+    [ProgressID] INT PRIMARY KEY IDENTITY,
+  [UserID] UNIQUEIDENTIFIER NOT NULL,
+    [CaseID] INT NOT NULL,
+    [Status] VARCHAR(20), -- 'Completed', 'In Progress', 'Locked'
+    [CompletionDate] DATETIME2 NULL,
+ [TimeSpentSeconds] INT,
+    [QueryAttempts] INT,
+    [HintsUsed] INT,
+ FOREIGN KEY ([UserID]) REFERENCES [dbo].[Users]([UserID]),
+    FOREIGN KEY ([CaseID]) REFERENCES [dbo].[Cases]([CaseID]),
+    UNIQUE ([UserID], [CaseID])
+);
+
+-- Current Tier Assignment
+CREATE TABLE [dbo].[UserTier] (
+    [UserID] UNIQUEIDENTIFIER PRIMARY KEY,
+    [CurrentTier] VARCHAR(50) NOT NULL,
+    [PromotionDate] DATETIME2 DEFAULT GETUTCDATE(),
+    FOREIGN KEY ([UserID]) REFERENCES [dbo].[Users]([UserID]),
+    CONSTRAINT CK_ValidTier CHECK (
+   [CurrentTier] IN (
+            'Junior Data Analyst',
+    'Senior Data Analyst',
+ 'Data Inspector',
+   'Data Detective',
+    'Director of Data Integrity'
+        )
+    )
+);
+
+-- Achievement Tracking
+CREATE TABLE [dbo].[UserAchievements] (
+    [AchievementID] INT PRIMARY KEY IDENTITY,
+    [UserID] UNIQUEIDENTIFIER NOT NULL,
+    [Badge] VARCHAR(50) NOT NULL, -- 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond'
+  [TierAchieved] VARCHAR(50) NOT NULL,
+    [EarnedDate] DATETIME2 DEFAULT GETUTCDATE(),
+    FOREIGN KEY ([UserID]) REFERENCES [dbo].[Users]([UserID])
+);
+```
+
+**User Experience (Phase 2):**
+```
+Student Flow (Phase 2):
+├─ Return to DataQuest
+├─ "Welcome back!" message
+├─ See current tier: "Senior Data Analyst"
+├─ See progress: "2/4 cases complete"
+├─ Select case (locked cases show lock icon)
+├─ Complete case
+├─ Progress updates immediately
+├─ If tier complete: Promotion message + badge award
+├─ Tier advancement unlocks new cases
+└─ Career progression visible in profile
+```
+
+**Tier Distribution (Phase 2):**
+```
+Tier 1: Junior Data Analyst
+├─ Case 1 (Simple)
+├─ Case 2 (Simple)
+└─ Case 3 (Simple)
+Promotion: 3/3 complete
+
+Tier 2: Senior Data Analyst
+├─ Case 4 (Moderate)
+├─ Case 5 (Moderate)
+├─ Case 6 (Moderate)
+└─ Case 7 (Moderate)
+Promotion: 4/4 complete
+
+Tier 3: Data Inspector
+├─ Case 8 (Complex)
+├─ Case 9 (Complex)
+├─ Case 10 (Complex)
+├─ Case 11 (Complex)
+└─ Case 12 (Complex)
+Promotion: 5/5 complete
+
+Tier 4: Data Detective
+├─ Case 13 (Advanced)
+├─ Case 14 (Advanced)
+└─ Case 15 (Advanced)
+Promotion: 3/3 complete
+```
+
+**Success Criteria:**
+- ✅ User tracking system working flawlessly
+- ✅ Tier progression logic enforced
+- ✅ Achievement system functional
+- ✅ 12-15 cases available across tiers
+- ✅ Students see clear career progression
+- ✅ Progression system motivates students
+- ✅ Privacy standards met (FERPA compliant, anonymous)
+
+---
+
+### Phase 3+: Advanced Features & Mastery Tier
+
+**Duration:** Weeks 13+  
+**Status:** Complete curriculum  
+**Primary Focus:** Master-level cases and analytics
+
+**Deliverables:**
+- ✅ 30-50+ total case library
+- ✅ 5+ Director of Data Integrity (Master) cases
+- ✅ Treasure hunt themed cases
+- ✅ Medical/business themed cases
+- ✅ Advanced analytics dashboard
+- ✅ Optional LMS integration
+- ✅ Optional leaderboard/social features
+- ✅ Optional mobile app
+
+**Not Phase 3:**
+- ❌ Account/login system (stays anonymous)
+- ❌ Personal data collection
+- ❌ School grade integration (optional only)
+
+---
+
+## 📊 Two-Phase Strategy Summary
 
 ```
-RULE 1: Tier Names
-MANDATORY: Use ONLY official tier names.
-           No variations, abbreviations, or alternatives.
-ENFORCEMENT: Code review and automated testing.
+PHASE 1 (MVP): Proof of Concept
+├─ 3 demonstration cases
+├─ Tier system design proven
+├─ Pedagogical approach demonstrated
+├─ Stateless, no user tracking
+└─ Launch to gather feedback
 
-RULE 2: Tier Progression
-MANDATORY: Sequential progression (no skipping).
-  Must complete ALL cases before advancing.
-ENFORCEMENT: System prevents access to locked tiers.
+PHASE 2: Full System
+├─ User tracking system
+├─ 12-15 case curriculum
+├─ Tier progression enforcement
+├─ Achievement system
+├─ Student persistence
+└─ Career progression visible
 
-RULE 3: Case Design
-MANDATORY: Follow tier-specific design standards.
-           Correct red herring and contradiction counts.
-ENFORCEMENT: Design review before case implementation.
-
-RULE 4: Database Storage
-MANDATORY: Tier names stored exactly as official.
-           Constraint enforces valid values.
-ENFORCEMENT: Database constraints.
-
-RULE 5: UI Display
-MANDATORY: Display tier names exactly as official.
-           Never shorten or abbreviate.
-ENFORCEMENT: Code review and UI testing.
-
-RULE 6: Agent Behavior
-MANDATORY: Agents must be tier-aware.
-           Hints and messaging tier-appropriate.
-ENFORCEMENT: Code review and testing.
-
-RULE 7: Documentation
-MANDATORY: All references use official tier names.
-         No outdated tier references.
-ENFORCEMENT: Documentation review and version control.
+PHASE 3+: Expansion & Analytics
+├─ 30-50+ case library
+├─ Master tier cases
+├─ Advanced analytics
+├─ Theme variations
+└─ Optional integrations
 ```
+
+---
+
+## ✨ Final Statement
+
+This tier system represents the **core pedagogical strategy** of DataQuest. It is not a technical implementation detail but a **fundamental design principle** that guides all decisions.
+
+Every case, every message, every UI element, and every agent response should reinforce the central truth:
+
+**Students are not playing a game with levels.**
+
+**Students are progressing through an authentic career path from entry-level analyst to executive director, learning real SQL skills through increasingly sophisticated data investigations.**
+
+This guideline ensures that principle is maintained consistently across all development phases.
+
+---
+
+## 🔄 Implementation Timeline
+
+### Phase 1 (MVP): Tier System Demonstration
+
+**Duration:** Weeks 1-4  
+**Status:** Foundation  
+**Primary Focus:** Demonstrate tier system design and pedagogical approach
+
+**Deliverables:**
+- ✅ 3 demonstration cases (one representing each tier level)
+- ✅ Tier system design concepts shown visually
+- ✅ Tier names used consistently in UI
+- ✅ Achievement badge mockups/concepts
+- ✅ Promotion message templates
+- ❌ No user tracking (intentional)
+- ❌ No persistent progression (stateless design)
+
+**User Experience:**
+```
+Student Flow (MVP):
+├─ Click "Start DataQuest"
+├─ Get session ID
+├─ View case options
+├─ Select and complete case
+├─ See promotion concept message
+├─ Session ends
+└─ Next visit = fresh start
+```
+
+**Acceptable MVP Limitation:**
+```
+"DataQuest MVP v1.0: Tier System Demonstration
+
+This version demonstrates our innovative tier progression system
+and the pedagogical approach behind DataQuest.
+
+Progress tracking will be implemented in Phase 2."
+```
+
+**Success Criteria:**
+- ✅ Tier system design is clear and engaging
+- ✅ Case quality demonstrates pedagogical approach
+- ✅ Stakeholders understand full vision
+- ✅ Student feedback is positive on concept
+- ✅ Ready for Phase 2 expansion
+
+---
+
+### Phase 2: Full Tier Progression System
+
+**Duration:** Weeks 5-12  
+**Status:** Complete system  
+**Primary Focus:** Implement user tracking and tier progression
+
+**HIGH PRIORITY DELIVERABLES:**
+1. ⭐⭐⭐ **User tracking system** (CRITICAL)
+   - User session management
+   - Progress persistence
+ - Case completion tracking
+   - Tier assignment tracking
+   - Achievement recording
+
+2. ⭐⭐⭐ **Case library expansion** (CRITICAL)
+   - 12-15 total cases across all tiers
+   - 3 Junior Data Analyst cases
+   - 4 Senior Data Analyst cases
+   - 5 Data Inspector cases
+   - 3 Data Detective cases
+   - 0 Director of Data Integrity cases (save for Phase 3)
+
+3. ⭐⭐ **Tier progression system**
+   - Tier advancement logic
+   - Tier-locked case enforcement
+   - Progression calculation
+
+4. ⭐⭐ **Achievement system** (Functional)
+   - Badge awarding logic
+   - Promotion notifications
+   - Career progression display
+
+**Database Schema (Phase 2):**
+```sql
+-- User Identity (minimal, anonymous)
+CREATE TABLE [dbo].[Users] (
+    [UserID] UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    [SessionToken] VARCHAR(255) NOT NULL UNIQUE,
+    [CreatedDate] DATETIME2 DEFAULT GETUTCDATE(),
+    [LastActivityDate] DATETIME2
+);
+
+-- Progress Tracking
+CREATE TABLE [dbo].[UserProgress] (
+    [ProgressID] INT PRIMARY KEY IDENTITY,
+  [UserID] UNIQUEIDENTIFIER NOT NULL,
+    [CaseID] INT NOT NULL,
+    [Status] VARCHAR(20), -- 'Completed', 'In Progress', 'Locked'
+    [CompletionDate] DATETIME2 NULL,
+ [TimeSpentSeconds] INT,
+    [QueryAttempts] INT,
+    [HintsUsed] INT,
+ FOREIGN KEY ([UserID]) REFERENCES [dbo].[Users]([UserID]),
+    FOREIGN KEY ([CaseID]) REFERENCES [dbo].[Cases]([CaseID]),
+    UNIQUE ([UserID], [CaseID])
+);
+
+-- Current Tier Assignment
+CREATE TABLE [dbo].[UserTier] (
+    [UserID] UNIQUEIDENTIFIER PRIMARY KEY,
+    [CurrentTier] VARCHAR(50) NOT NULL,
+    [PromotionDate] DATETIME2 DEFAULT GETUTCDATE(),
+    FOREIGN KEY ([UserID]) REFERENCES [dbo].[Users]([UserID]),
+    CONSTRAINT CK_ValidTier CHECK (
+   [CurrentTier] IN (
+            'Junior Data Analyst',
+    'Senior Data Analyst',
+ 'Data Inspector',
+   'Data Detective',
+    'Director of Data Integrity'
+        )
+    )
+);
+
+-- Achievement Tracking
+CREATE TABLE [dbo].[UserAchievements] (
+    [AchievementID] INT PRIMARY KEY IDENTITY,
+    [UserID] UNIQUEIDENTIFIER NOT NULL,
+    [Badge] VARCHAR(50) NOT NULL, -- 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond'
+  [TierAchieved] VARCHAR(50) NOT NULL,
+    [EarnedDate] DATETIME2 DEFAULT GETUTCDATE(),
+    FOREIGN KEY ([UserID]) REFERENCES [dbo].[Users]([UserID])
+);
+```
+
+**User Experience (Phase 2):**
+```
+Student Flow (Phase 2):
+├─ Return to DataQuest
+├─ "Welcome back!" message
+├─ See current tier: "Senior Data Analyst"
+├─ See progress: "2/4 cases complete"
+├─ Select case (locked cases show lock icon)
+├─ Complete case
+├─ Progress updates immediately
+├─ If tier complete: Promotion message + badge award
+├─ Tier advancement unlocks new cases
+└─ Career progression visible in profile
+```
+
+**Tier Distribution (Phase 2):**
+```
+Tier 1: Junior Data Analyst
+├─ Case 1 (Simple)
+├─ Case 2 (Simple)
+└─ Case 3 (Simple)
+Promotion: 3/3 complete
+
+Tier 2: Senior Data Analyst
+├─ Case 4 (Moderate)
+├─ Case 5 (Moderate)
+├─ Case 6 (Moderate)
+└─ Case 7 (Moderate)
+Promotion: 4/4 complete
+
+Tier 3: Data Inspector
+├─ Case 8 (Complex)
+├─ Case 9 (Complex)
+├─ Case 10 (Complex)
+├─ Case 11 (Complex)
+└─ Case 12 (Complex)
+Promotion: 5/5 complete
+
+Tier 4: Data Detective
+├─ Case 13 (Advanced)
+├─ Case 14 (Advanced)
+└─ Case 15 (Advanced)
+Promotion: 3/3 complete
+```
+
+**Success Criteria:**
+- ✅ User tracking system working flawlessly
+- ✅ Tier progression logic enforced
+- ✅ Achievement system functional
+- ✅ 12-15 cases available across tiers
+- ✅ Students see clear career progression
+- ✅ Progression system motivates students
+- ✅ Privacy standards met (FERPA compliant, anonymous)
+
+---
+
+### Phase 3+: Advanced Features & Mastery Tier
+
+**Duration:** Weeks 13+  
+**Status:** Complete curriculum  
+**Primary Focus:** Master-level cases and analytics
+
+**Deliverables:**
+- ✅ 30-50+ total case library
+- ✅ 5+ Director of Data Integrity (Master) cases
+- ✅ Treasure hunt themed cases
+- ✅ Medical/business themed cases
+- ✅ Advanced analytics dashboard
+- ✅ Optional LMS integration
+- ✅ Optional leaderboard/social features
+- ✅ Optional mobile app
+
+**Not Phase 3:**
+- ❌ Account/login system (stays anonymous)
+- ❌ Personal data collection
+- ❌ School grade integration (optional only)
+
+---
+
+## 📉 Implementation Risks
+
+### Potential Risks
+
+1. **Design Misalignment**
+   - Risk: Cases or UI elements don't match tier design principles
+   - Mitigation: Comprehensive design review and testing
+
+2. **Technical Constraints**
+   - Risk: Database or UI limitations hinder implementation
+   - Mitigation: Early identification of technical challenges, iterative development
+
+3. **Data Privacy Concerns**
+   - Risk: User tracking conflicts with privacy standards (e.g., FERPA)
+   - Mitigation: Implement anonymous usage tracking, avoid personal data collection
+
+4. **Insufficient Testing**
+   - Risk: Incomplete testing leads to undetected issues
+   - Mitigation: Thorough QA checklist and testing before each phase release
+
+5. **Scope Creep**
+   - Risk: Additional features or cases requested beyond initial plan
+   - Mitigation: Strict adherence to defined phase deliverables, change control process
+
+6. **Lack of Stakeholder Buy-in**
+   - Risk: Stakeholders不支持 or理解 approvals delayed
+   - Mitigation: Regular updates and demonstrations to stakeholders, gather feedback early
 
 ---
 
@@ -1007,24 +1490,4 @@ METRIC 5: System Consistency
 - **Quality assurance** → See Section: Quality Assurance Standards
 
 ---
-
-## ✨ Final Statement
-
-This tier system represents the **core pedagogical strategy** of DataQuest. It is not a technical implementation detail but a **fundamental design principle** that guides all decisions.
-
-Every case, every message, every UI element, and every agent response should reinforce the central truth:
-
-**Students are not playing a game with levels.**
-
-**Students are progressing through an authentic career path from entry-level analyst to executive director, learning real SQL skills through increasingly sophisticated data investigations.**
-
-This guideline ensures that principle is maintained consistently across all development phases.
-
----
-
-**DOCUMENT STATUS:** ✅ **OFFICIAL - BINDING FOR ALL DEVELOPMENT**
-
-**Effective Date:** December 3, 2025  
-**Implementation Required By:** Start of Phase 1 (MVP)  
-**Review Schedule:** After each phase completion
 
