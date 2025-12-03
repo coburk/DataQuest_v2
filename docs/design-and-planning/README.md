@@ -2,11 +2,11 @@
 
 **Purpose:** Core implementation specifications for DataQuest Phase 1
 
-This folder contains the **8 critical specifications** that define the complete architecture, systems, and implementation requirements for DataQuest Phase 1.
+This folder contains the **9 critical specifications** that define the complete architecture, systems, and implementation requirements for DataQuest Phase 1.
 
 ---
 
-## 📋 Eight Core Specifications
+## 📋 Nine Core Specifications
 
 ### 1. Query Tutor Agent Implementation Specification
 **File:** `Query-Tutor-Agent-Implementation-Specification.md`  
@@ -91,14 +91,29 @@ This folder contains the **8 critical specifications** that define the complete 
 - Safety guardrails and constraints
 - Prompt versioning strategy
 
+### 9. MCP Integration Design
+**File:** `MCP-Integration-Design.md`  
+**Purpose:** Defines the strategy for integrating the existing MSSQL MCP server into DataQuest.  
+**Size:** 739 lines  
+**Key Content:**
+- Reusability assessment of existing MCP (✅ Highly Compatible)
+- Integration strategy and architecture
+- Tool definitions for DataQuest
+- 5-phase implementation roadmap
+- Required modifications (minimal)
+- Safety and performance guidelines
+- Success criteria and integration checklist
+
+**Status:** Ready to integrate with Phase 1 services
+
 ---
 
 ## 📊 Summary Statistics
 
 ```
-Total Specifications: 8
-Total Lines: 11,346
-Average Lines per Spec: 1,419
+Total Specifications: 9
+Total Lines: 12,085
+Average Lines per Spec: 1,343
 Completeness: 100%
 Implementation Ready: Yes
 Zero Ambiguity: Yes
@@ -108,7 +123,7 @@ Zero Ambiguity: Yes
 
 ## 🔗 Foundation Document
 
-All 8 specifications are built on:
+All 9 specifications are built on:
 - **DataQuest-Tier-System-Official-Design-Guideline.md** - The strategic vision operationalized
 
 ---
@@ -117,6 +132,27 @@ All 8 specifications are built on:
 
 - **process-documentation/** - Analysis reports, progress summaries, and project tracking
 - **technical-design/** - Database schema, data models, and technical architecture
+
+---
+
+## 🔌 MCP Integration
+
+This folder also contains:
+
+### 9. MCP Integration Design
+**File:** `MCP-Integration-Design.md`  
+**Purpose:** Defines the strategy for integrating the existing MSSQL MCP server into DataQuest.  
+**Size:** 739 lines  
+**Key Content:**
+- Reusability assessment of existing MCP (✅ Highly Compatible)
+- Integration strategy and architecture
+- Tool definitions for DataQuest
+- 5-phase implementation roadmap
+- Required modifications (minimal)
+- Safety and performance guidelines
+- Success criteria and integration checklist
+
+**Status:** Ready to integrate with Phase 1 services
 
 ---
 
@@ -161,5 +197,5 @@ These specifications are the **definitive implementation guidance** for DataQues
 
 **Last Updated:** December 3, 2025  
 **Status:** ✅ Complete and Ready for Implementation
-**All 8 Critical Specifications:** ✅ 100% Delivered
+**All 9 Critical Specifications:** ✅ 100% Delivered
 
