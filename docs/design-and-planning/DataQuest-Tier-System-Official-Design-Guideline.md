@@ -630,29 +630,128 @@ Director of Data Integrity:
 #### Query Tutor Agent Tier Awareness
 
 ```
-RULE: Hints must be tier-appropriate.
+RULE: Hints must be tier-appropriate AND fundamentally Socratic.
 
-RULE: Hint escalation by tier:
+RULE: Socratic Method Foundation
+- ALL tiers START with questions, not answers
+- Guide students to discover answers themselves
+- Build from what they already know
+- Encourage reasoning and critical thinking
+- Only escalate to direct answers as last resort
 
-Junior Data Analyst:
-Level 1: Show required tables
-Level 2: Suggest query structure
-Level 3: Show partial query
-Level 4: Show canonical query
+RULE: Hint Escalation by Tier (Socratic First, Always)
 
-Senior Data Analyst:
-Level 1: Describe what to find
-Level 2: Suggest approach
-Level 3: Canonical query (if very stuck)
+JUNIOR DATA ANALYST:
+Level 1 (Socratic): "What tables contain the information you're looking for?"
+Level 2 (Socratic): "Which columns from those tables would help you find X?"
+Level 3 (Socratic): "How would you combine those columns to answer the question?"
+Level 4 (Guided): "Try using SELECT with WHERE - what would that look like?"
+Level 5 (Partial): "Here's the structure: SELECT [columns] FROM [table] WHERE..."
+Level 6 (Answer): "Here's the canonical query: SELECT..."
 
-Data Detective:
-Level 1: "What pattern would answer this?"
-Level 2: "What tables would help?"
-Level 3: Canonical query (rarely needed)
+SENIOR DATA ANALYST:
+Level 1 (Socratic): "What does the question really ask you to find?"
+Level 2 (Socratic): "Which tables need to be involved to get that information?"
+Level 3 (Socratic): "How would you connect those tables together?"
+Level 4 (Guided): "A JOIN might help here - which type? Why?"
+Level 5 (Partial): "Your structure looks like: SELECT [...] FROM [...] JOIN..."
+Level 6 (Answer): "Here's the canonical query: SELECT..."
 
-Director of Data Integrity:
-Level 1: "What question should you ask?"
-Level 2: Canonical query (rarely used)
+DATA INSPECTOR:
+Level 1 (Socratic): "What inconsistency or pattern are you trying to verify?"
+Level 2 (Socratic): "What does quality verification mean in this context?"
+Level 3 (Socratic): "Which tables reveal this quality issue?"
+Level 4 (Socratic): "How many tables do you need to JOIN to see the pattern?"
+Level 5 (Guided): "Consider using GROUP BY or aggregation - what would you count?"
+Level 6 (Answer): "Here's the canonical query: SELECT..."
+
+DATA DETECTIVE:
+Level 1 (Socratic): "What pattern or signal are you searching for?"
+Level 2 (Socratic): "What evidence would prove or disprove your hypothesis?"
+Level 3 (Socratic): "Where in the data would you find that evidence?"
+Level 4 (Socratic): "How would you isolate signal from noise?"
+Level 5 (Guided): "What query structure would reveal this pattern?"
+Level 6 (Answer): "Here's the canonical query: SELECT..."
+
+DIRECTOR OF DATA INTEGRITY:
+Level 1 (Socratic): "What strategic question are you trying to answer?"
+Level 2 (Socratic): "What multiple interpretations of the data exist?"
+Level 3 (Socratic): "What evidence supports or contradicts each interpretation?"
+Level 4 (Socratic): "How would you structure a query to test each hypothesis?"
+Level 5 (Guided): "Consider this query structure for exploration: ..."
+Level 6 (Answer): "Here's one possible query: SELECT..." (Acknowledge others exist)
+```
+
+**Critical Principle: Socratic Progression**
+
+```
+CORE RULE: Query Tutor is Fundamentally Socratic
+
+The Socratic method assumes:
+✓ Students have knowledge they haven't yet accessed
+✓ Asking questions activates this latent knowledge
+✓ Students discover answers through guided reasoning
+✓ Deep learning occurs through intellectual struggle
+✓ Direct answers prevent learning
+
+Implementation Mandate:
+├─ NEVER jump straight to answers
+├─ ALWAYS start with questions about what they know
+├─ GUIDE them through reasoning steps
+├─ Only show queries when student has exhausted reasoning
+├─ Make direct answers the LAST resort, not the first
+
+Escalation is Tier-Based, NOT Socratic-Reduction:
+├─ Junior Analyst: More scaffolding in questions
+├─ Senior Analyst: Fewer scaffolding, more open questions
+├─ Data Inspector: Questions assume knowledge, probe reasoning
+├─ Data Detective: Questions test strategic thinking
+├─ Director: Questions explore multiple valid interpretations
+
+KEY DISTINCTION:
+❌ WRONG: Escalate from hard questions → easy questions → answers
+✅ RIGHT: Escalate from open questions → guided questions → structured questions → hints → partial answers → full answers
+
+The Socratic method is the FOUNDATION at every tier.
+Escalation adds SPECIFICITY, not ABANDONS Socratic method.
+```
+
+**Example: Same Question, Different Tier Treatment**
+
+```
+STUDENT QUESTION: "How do I find people with suspicious activity?"
+
+JUNIOR DATA ANALYST (Socratic + Scaffolding):
+Q1: "What does 'suspicious activity' mean in this case?"
+   (Student: Large transactions)
+Q2: "Where in the database would large transactions be recorded?"
+   (Student: Transaction logs)
+Q3: "What makes a transaction 'large'? How would you define it?"
+   (Student: Over $10,000)
+Q4: "How would you find all transactions over $10,000?"
+   (Student: WHERE Amount > 10000)
+✓ Student discovered the query through reasoning
+
+SENIOR DATA ANALYST (Socratic, Less Scaffolding):
+Q1: "What defines suspicious in this investigation?"
+Q2: "How would you filter for that definition?"
+Q3: "What query structure matches that logic?"
+   (If still stuck, then show partial query)
+✓ Student reasoned with less hand-holding
+
+DATA DETECTIVE (Socratic, Strategic):
+Q1: "Is 'suspicious' the same as 'guilty'?"
+Q2: "What patterns would distinguish signal from noise?"
+Q3: "How would your query account for red herrings?"
+   (If stuck: "Consider what makes something both suspicious AND relevant")
+✓ Student thinks strategically about investigation
+
+DIRECTOR (Socratic, Multi-Interpretation):
+Q1: "What are ALL valid interpretations of 'suspicious'?"
+Q2: "Which query would test interpretation #1? #2? #3?"
+Q3: "How would you present findings to an executive?"
+   (If stuck: "What query structures could you use to explore each?")
+✓ Student recognizes multiple valid approaches
 ```
 
 ---
@@ -889,502 +988,6 @@ TIER SYSTEM QA CHECKLIST:
    - Match official badge names
    - Use correct icons/colors
    - Fire promotion messages correctly
-
----
-
-## 📉 Implementation Risks
-
-### Potential Risks
-
-1. **Design Misalignment**
-   - Risk: Cases or UI elements don't match tier design principles
-   - Mitigation: Comprehensive design review and testing
-
-2. **Technical Constraints**
-   - Risk: Database or UI limitations hinder implementation
-   - Mitigation: Early identification of technical challenges, iterative development
-
-3. **Data Privacy Concerns**
-   - Risk: User tracking conflicts with privacy standards (e.g., FERPA)
-   - Mitigation: Implement anonymous usage tracking, avoid personal data collection
-
-4. **Insufficient Testing**
-   - Risk: Incomplete testing leads to undetected issues
-   - Mitigation: Thorough QA checklist and testing before each phase release
-
-5. **Scope Creep**
-   - Risk: Additional features or cases requested beyond initial plan
-   - Mitigation: Strict adherence to defined phase deliverables, change control process
-
-6. **Lack of Stakeholder Buy-in**
-   - Risk: Stakeholders不支持 or理解 approvals delayed
-   - Mitigation: Regular updates and demonstrations to stakeholders, gather feedback early
-
----
-
-## 🔄 Implementation Timeline
-
-### Phase 1 (MVP): Tier System Demonstration
-
-**Duration:** Weeks 1-4  
-**Status:** Foundation  
-**Primary Focus:** Demonstrate tier system design and pedagogical approach
-
-**Deliverables:**
-- ✅ 3 demonstration cases (one representing each tier level)
-- ✅ Tier system design concepts shown visually
-- ✅ Tier names used consistently in UI
-- ✅ Achievement badge mockups/concepts
-- ✅ Promotion message templates
-- ❌ No user tracking (intentional)
-- ❌ No persistent progression (stateless design)
-
-**User Experience:**
-```
-Student Flow (MVP):
-├─ Click "Start DataQuest"
-├─ Get session ID
-├─ View case options
-├─ Select and complete case
-├─ See promotion concept message
-├─ Session ends
-└─ Next visit = fresh start
-```
-
-**Acceptable MVP Limitation:**
-```
-"DataQuest MVP v1.0: Tier System Demonstration
-
-This version demonstrates our innovative tier progression system
-and the pedagogical approach behind DataQuest.
-
-Progress tracking will be implemented in Phase 2."
-```
-
-**Success Criteria:**
-- ✅ Tier system design is clear and engaging
-- ✅ Case quality demonstrates pedagogical approach
-- ✅ Stakeholders understand full vision
-- ✅ Student feedback is positive on concept
-- ✅ Ready for Phase 2 expansion
-
----
-
-### Phase 2: Full Tier Progression System
-
-**Duration:** Weeks 5-12  
-**Status:** Complete system  
-**Primary Focus:** Implement user tracking and tier progression
-
-**HIGH PRIORITY DELIVERABLES:**
-1. ⭐⭐⭐ **User tracking system** (CRITICAL)
-   - User session management
-   - Progress persistence
- - Case completion tracking
-   - Tier assignment tracking
-   - Achievement recording
-
-2. ⭐⭐⭐ **Case library expansion** (CRITICAL)
-   - 12-15 total cases across all tiers
-   - 3 Junior Data Analyst cases
-   - 4 Senior Data Analyst cases
-   - 5 Data Inspector cases
-   - 3 Data Detective cases
-   - 0 Director of Data Integrity cases (save for Phase 3)
-
-3. ⭐⭐ **Tier progression system**
-   - Tier advancement logic
-   - Tier-locked case enforcement
-   - Progression calculation
-
-4. ⭐⭐ **Achievement system** (Functional)
-   - Badge awarding logic
-   - Promotion notifications
-   - Career progression display
-
-**Database Schema (Phase 2):**
-```sql
--- User Identity (minimal, anonymous)
-CREATE TABLE [dbo].[Users] (
-    [UserID] UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
-    [SessionToken] VARCHAR(255) NOT NULL UNIQUE,
-    [CreatedDate] DATETIME2 DEFAULT GETUTCDATE(),
-    [LastActivityDate] DATETIME2
-);
-
--- Progress Tracking
-CREATE TABLE [dbo].[UserProgress] (
-    [ProgressID] INT PRIMARY KEY IDENTITY,
-  [UserID] UNIQUEIDENTIFIER NOT NULL,
-    [CaseID] INT NOT NULL,
-    [Status] VARCHAR(20), -- 'Completed', 'In Progress', 'Locked'
-    [CompletionDate] DATETIME2 NULL,
- [TimeSpentSeconds] INT,
-    [QueryAttempts] INT,
-    [HintsUsed] INT,
- FOREIGN KEY ([UserID]) REFERENCES [dbo].[Users]([UserID]),
-    FOREIGN KEY ([CaseID]) REFERENCES [dbo].[Cases]([CaseID]),
-    UNIQUE ([UserID], [CaseID])
-);
-
--- Current Tier Assignment
-CREATE TABLE [dbo].[UserTier] (
-    [UserID] UNIQUEIDENTIFIER PRIMARY KEY,
-    [CurrentTier] VARCHAR(50) NOT NULL,
-    [PromotionDate] DATETIME2 DEFAULT GETUTCDATE(),
-    FOREIGN KEY ([UserID]) REFERENCES [dbo].[Users]([UserID]),
-    CONSTRAINT CK_ValidTier CHECK (
-   [CurrentTier] IN (
-            'Junior Data Analyst',
-    'Senior Data Analyst',
- 'Data Inspector',
-   'Data Detective',
-    'Director of Data Integrity'
-        )
-    )
-);
-
--- Achievement Tracking
-CREATE TABLE [dbo].[UserAchievements] (
-    [AchievementID] INT PRIMARY KEY IDENTITY,
-    [UserID] UNIQUEIDENTIFIER NOT NULL,
-    [Badge] VARCHAR(50) NOT NULL, -- 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond'
-  [TierAchieved] VARCHAR(50) NOT NULL,
-    [EarnedDate] DATETIME2 DEFAULT GETUTCDATE(),
-    FOREIGN KEY ([UserID]) REFERENCES [dbo].[Users]([UserID])
-);
-```
-
-**User Experience (Phase 2):**
-```
-Student Flow (Phase 2):
-├─ Return to DataQuest
-├─ "Welcome back!" message
-├─ See current tier: "Senior Data Analyst"
-├─ See progress: "2/4 cases complete"
-├─ Select case (locked cases show lock icon)
-├─ Complete case
-├─ Progress updates immediately
-├─ If tier complete: Promotion message + badge award
-├─ Tier advancement unlocks new cases
-└─ Career progression visible in profile
-```
-
-**Tier Distribution (Phase 2):**
-```
-Tier 1: Junior Data Analyst
-├─ Case 1 (Simple)
-├─ Case 2 (Simple)
-└─ Case 3 (Simple)
-Promotion: 3/3 complete
-
-Tier 2: Senior Data Analyst
-├─ Case 4 (Moderate)
-├─ Case 5 (Moderate)
-├─ Case 6 (Moderate)
-└─ Case 7 (Moderate)
-Promotion: 4/4 complete
-
-Tier 3: Data Inspector
-├─ Case 8 (Complex)
-├─ Case 9 (Complex)
-├─ Case 10 (Complex)
-├─ Case 11 (Complex)
-└─ Case 12 (Complex)
-Promotion: 5/5 complete
-
-Tier 4: Data Detective
-├─ Case 13 (Advanced)
-├─ Case 14 (Advanced)
-└─ Case 15 (Advanced)
-Promotion: 3/3 complete
-```
-
-**Success Criteria:**
-- ✅ User tracking system working flawlessly
-- ✅ Tier progression logic enforced
-- ✅ Achievement system functional
-- ✅ 12-15 cases available across tiers
-- ✅ Students see clear career progression
-- ✅ Progression system motivates students
-- ✅ Privacy standards met (FERPA compliant, anonymous)
-
----
-
-### Phase 3+: Advanced Features & Mastery Tier
-
-**Duration:** Weeks 13+  
-**Status:** Complete curriculum  
-**Primary Focus:** Master-level cases and analytics
-
-**Deliverables:**
-- ✅ 30-50+ total case library
-- ✅ 5+ Director of Data Integrity (Master) cases
-- ✅ Treasure hunt themed cases
-- ✅ Medical/business themed cases
-- ✅ Advanced analytics dashboard
-- ✅ Optional LMS integration
-- ✅ Optional leaderboard/social features
-- ✅ Optional mobile app
-
-**Not Phase 3:**
-- ❌ Account/login system (stays anonymous)
-- ❌ Personal data collection
-- ❌ School grade integration (optional only)
-
----
-
-## 📊 Two-Phase Strategy Summary
-
-```
-PHASE 1 (MVP): Proof of Concept
-├─ 3 demonstration cases
-├─ Tier system design proven
-├─ Pedagogical approach demonstrated
-├─ Stateless, no user tracking
-└─ Launch to gather feedback
-
-PHASE 2: Full System
-├─ User tracking system
-├─ 12-15 case curriculum
-├─ Tier progression enforcement
-├─ Achievement system
-├─ Student persistence
-└─ Career progression visible
-
-PHASE 3+: Expansion & Analytics
-├─ 30-50+ case library
-├─ Master tier cases
-├─ Advanced analytics
-├─ Theme variations
-└─ Optional integrations
-```
-
----
-
-## ✨ Final Statement
-
-This tier system represents the **core pedagogical strategy** of DataQuest. It is not a technical implementation detail but a **fundamental design principle** that guides all decisions.
-
-Every case, every message, every UI element, and every agent response should reinforce the central truth:
-
-**Students are not playing a game with levels.**
-
-**Students are progressing through an authentic career path from entry-level analyst to executive director, learning real SQL skills through increasingly sophisticated data investigations.**
-
-This guideline ensures that principle is maintained consistently across all development phases.
-
----
-
-## 🔄 Implementation Timeline
-
-### Phase 1 (MVP): Tier System Demonstration
-
-**Duration:** Weeks 1-4  
-**Status:** Foundation  
-**Primary Focus:** Demonstrate tier system design and pedagogical approach
-
-**Deliverables:**
-- ✅ 3 demonstration cases (one representing each tier level)
-- ✅ Tier system design concepts shown visually
-- ✅ Tier names used consistently in UI
-- ✅ Achievement badge mockups/concepts
-- ✅ Promotion message templates
-- ❌ No user tracking (intentional)
-- ❌ No persistent progression (stateless design)
-
-**User Experience:**
-```
-Student Flow (MVP):
-├─ Click "Start DataQuest"
-├─ Get session ID
-├─ View case options
-├─ Select and complete case
-├─ See promotion concept message
-├─ Session ends
-└─ Next visit = fresh start
-```
-
-**Acceptable MVP Limitation:**
-```
-"DataQuest MVP v1.0: Tier System Demonstration
-
-This version demonstrates our innovative tier progression system
-and the pedagogical approach behind DataQuest.
-
-Progress tracking will be implemented in Phase 2."
-```
-
-**Success Criteria:**
-- ✅ Tier system design is clear and engaging
-- ✅ Case quality demonstrates pedagogical approach
-- ✅ Stakeholders understand full vision
-- ✅ Student feedback is positive on concept
-- ✅ Ready for Phase 2 expansion
-
----
-
-### Phase 2: Full Tier Progression System
-
-**Duration:** Weeks 5-12  
-**Status:** Complete system  
-**Primary Focus:** Implement user tracking and tier progression
-
-**HIGH PRIORITY DELIVERABLES:**
-1. ⭐⭐⭐ **User tracking system** (CRITICAL)
-   - User session management
-   - Progress persistence
- - Case completion tracking
-   - Tier assignment tracking
-   - Achievement recording
-
-2. ⭐⭐⭐ **Case library expansion** (CRITICAL)
-   - 12-15 total cases across all tiers
-   - 3 Junior Data Analyst cases
-   - 4 Senior Data Analyst cases
-   - 5 Data Inspector cases
-   - 3 Data Detective cases
-   - 0 Director of Data Integrity cases (save for Phase 3)
-
-3. ⭐⭐ **Tier progression system**
-   - Tier advancement logic
-   - Tier-locked case enforcement
-   - Progression calculation
-
-4. ⭐⭐ **Achievement system** (Functional)
-   - Badge awarding logic
-   - Promotion notifications
-   - Career progression display
-
-**Database Schema (Phase 2):**
-```sql
--- User Identity (minimal, anonymous)
-CREATE TABLE [dbo].[Users] (
-    [UserID] UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
-    [SessionToken] VARCHAR(255) NOT NULL UNIQUE,
-    [CreatedDate] DATETIME2 DEFAULT GETUTCDATE(),
-    [LastActivityDate] DATETIME2
-);
-
--- Progress Tracking
-CREATE TABLE [dbo].[UserProgress] (
-    [ProgressID] INT PRIMARY KEY IDENTITY,
-  [UserID] UNIQUEIDENTIFIER NOT NULL,
-    [CaseID] INT NOT NULL,
-    [Status] VARCHAR(20), -- 'Completed', 'In Progress', 'Locked'
-    [CompletionDate] DATETIME2 NULL,
- [TimeSpentSeconds] INT,
-    [QueryAttempts] INT,
-    [HintsUsed] INT,
- FOREIGN KEY ([UserID]) REFERENCES [dbo].[Users]([UserID]),
-    FOREIGN KEY ([CaseID]) REFERENCES [dbo].[Cases]([CaseID]),
-    UNIQUE ([UserID], [CaseID])
-);
-
--- Current Tier Assignment
-CREATE TABLE [dbo].[UserTier] (
-    [UserID] UNIQUEIDENTIFIER PRIMARY KEY,
-    [CurrentTier] VARCHAR(50) NOT NULL,
-    [PromotionDate] DATETIME2 DEFAULT GETUTCDATE(),
-    FOREIGN KEY ([UserID]) REFERENCES [dbo].[Users]([UserID]),
-    CONSTRAINT CK_ValidTier CHECK (
-   [CurrentTier] IN (
-            'Junior Data Analyst',
-    'Senior Data Analyst',
- 'Data Inspector',
-   'Data Detective',
-    'Director of Data Integrity'
-        )
-    )
-);
-
--- Achievement Tracking
-CREATE TABLE [dbo].[UserAchievements] (
-    [AchievementID] INT PRIMARY KEY IDENTITY,
-    [UserID] UNIQUEIDENTIFIER NOT NULL,
-    [Badge] VARCHAR(50) NOT NULL, -- 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond'
-  [TierAchieved] VARCHAR(50) NOT NULL,
-    [EarnedDate] DATETIME2 DEFAULT GETUTCDATE(),
-    FOREIGN KEY ([UserID]) REFERENCES [dbo].[Users]([UserID])
-);
-```
-
-**User Experience (Phase 2):**
-```
-Student Flow (Phase 2):
-├─ Return to DataQuest
-├─ "Welcome back!" message
-├─ See current tier: "Senior Data Analyst"
-├─ See progress: "2/4 cases complete"
-├─ Select case (locked cases show lock icon)
-├─ Complete case
-├─ Progress updates immediately
-├─ If tier complete: Promotion message + badge award
-├─ Tier advancement unlocks new cases
-└─ Career progression visible in profile
-```
-
-**Tier Distribution (Phase 2):**
-```
-Tier 1: Junior Data Analyst
-├─ Case 1 (Simple)
-├─ Case 2 (Simple)
-└─ Case 3 (Simple)
-Promotion: 3/3 complete
-
-Tier 2: Senior Data Analyst
-├─ Case 4 (Moderate)
-├─ Case 5 (Moderate)
-├─ Case 6 (Moderate)
-└─ Case 7 (Moderate)
-Promotion: 4/4 complete
-
-Tier 3: Data Inspector
-├─ Case 8 (Complex)
-├─ Case 9 (Complex)
-├─ Case 10 (Complex)
-├─ Case 11 (Complex)
-└─ Case 12 (Complex)
-Promotion: 5/5 complete
-
-Tier 4: Data Detective
-├─ Case 13 (Advanced)
-├─ Case 14 (Advanced)
-└─ Case 15 (Advanced)
-Promotion: 3/3 complete
-```
-
-**Success Criteria:**
-- ✅ User tracking system working flawlessly
-- ✅ Tier progression logic enforced
-- ✅ Achievement system functional
-- ✅ 12-15 cases available across tiers
-- ✅ Students see clear career progression
-- ✅ Progression system motivates students
-- ✅ Privacy standards met (FERPA compliant, anonymous)
-
----
-
-### Phase 3+: Advanced Features & Mastery Tier
-
-**Duration:** Weeks 13+  
-**Status:** Complete curriculum  
-**Primary Focus:** Master-level cases and analytics
-
-**Deliverables:**
-- ✅ 30-50+ total case library
-- ✅ 5+ Director of Data Integrity (Master) cases
-- ✅ Treasure hunt themed cases
-- ✅ Medical/business themed cases
-- ✅ Advanced analytics dashboard
-- ✅ Optional LMS integration
-- ✅ Optional leaderboard/social features
-- ✅ Optional mobile app
-
-**Not Phase 3:**
-- ❌ Account/login system (stays anonymous)
-- ❌ Personal data collection
-- ❌ School grade integration (optional only)
 
 ---
 
