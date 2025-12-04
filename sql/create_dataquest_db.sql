@@ -43,10 +43,11 @@ GO
 -- Represents individuals involved in cases (suspects, witnesses, victims)
 CREATE TABLE [dbo].[Persons] (
     [PersonID] INT PRIMARY KEY IDENTITY(1,1),
-    [Name] VARCHAR(50) NOT NULL,
+    [FirstName] VARCHAR(50) NOT NULL,
+    [LastName] VARCHAR(50) NOT NULL,
     [Role] VARCHAR(50) NOT NULL, -- 'Suspect', 'Witness', 'Victim', 'Investigator'
     [IsSuspect] BIT NOT NULL DEFAULT 0,
-[CreatedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+    [CreatedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [ModifiedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE()
 );
 GO
@@ -161,7 +162,8 @@ GO
 -- ============================================================
 
 -- Person/Relationship lookups
-CREATE INDEX IDX_Persons_Name ON [dbo].[Persons]([Name]);
+CREATE INDEX IDX_Persons_FirstName ON [dbo].[Persons]([FirstName]);
+CREATE INDEX IDX_Persons_LastName ON [dbo].[Persons]([LastName]);
 CREATE INDEX IDX_Relationships_PersonA ON [dbo].[Relationships]([PersonID_A]);
 CREATE INDEX IDX_Relationships_PersonB ON [dbo].[Relationships]([PersonID_B]);
 
