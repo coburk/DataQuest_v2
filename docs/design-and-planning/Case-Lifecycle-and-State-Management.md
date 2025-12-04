@@ -7,6 +7,20 @@
 
 ---
 
+**SOURCE OF TRUTH TRACKING**
+
+**COMPLIANCE STATUS:** ✅ PROPOSAL-COMPLIANT  
+**SOURCE OF TRUTH:** 
+- Tier 1: `docs/proposal/DataQuest-Project-Proposal.md`
+- Tier 3: This document
+
+**CHANGE REQUESTS:** NONE  
+**CAPSTONE IMPACT:** ZERO  
+**LAST COMPLIANCE REVIEW:** December 3, 2025  
+**REVIEWED BY:** Systematic Compliance Review
+
+---
+
 ## 📋 Document Purpose
 
 This specification defines the complete lifecycle of cases in DataQuest, including all states, transitions, and state management requirements. It operationalizes the student journey through investigation cases from start to completion and tier advancement.
