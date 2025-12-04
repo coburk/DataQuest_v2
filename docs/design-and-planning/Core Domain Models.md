@@ -12,7 +12,7 @@ These models mirror the structure of the relational database tables, enabling th
 
 | **C# Class**                | **Purpose**                                      | **Key Properties**                                                              | **Data Dictionary Reference** |
 | --------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------- | ----------------------------------- |
-| **`Person`**              | Represents any individual involved in the case.        | `PersonID`(int),`Name`(string),`Role`(string),`IsSuspect`(bool).              | `Persons`Table                    |
+| **`Person`** | Represents any individual involved in the case.        | `PersonID`(int),`FirstName`(string),`LastName`(string),`Role`(string),`IsSuspect`(bool).  | `Persons`Table             |
 | **`Location`**            | Represents a physical setting or place of interest.    | `LocationID`(int),`Name`(string),`Address`(string).                             | `Locations`Table                  |
 | **`EvidenceRecord`**      | Represents a piece of evidence or a log entry found.   | `EvidenceID`(int),`CaseID`(int),`LocationID`(int),`TimestampFound`(DateTime). | `Evidence`Table                   |
 | **`CommunicationRecord`** | Represents logs of communication (e.g., phone, email). | `RecordID`(int),`CallerID`(int),`ReceiverID`(int),`Timestamp`(DateTime).      | `CommunicationRecords`Table       |

@@ -214,7 +214,8 @@ CASES (Metadata - case definitions)
 PERSONS (PK: PersonID)
   ├─ PersonID (int)
   ├─ CaseID (int, FK→Cases)
-  ├─ Name (varchar(50))
+  ├─ FirstName (varchar(50))
+  ├─ LastName (varchar(50))
   ├─ Role (varchar(50))
   └─ IsSuspect (bit)
 
@@ -290,7 +291,8 @@ These tables are defined per-case in separate case databases. Key tables include
 CREATE TABLE Persons (
     PersonID INT PRIMARY KEY,
     CaseID INT NOT NULL,
-    Name VARCHAR(50) NOT NULL,
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
     Role VARCHAR(50) NOT NULL CHECK (Role IN ('Suspect', 'Witness', 'Victim')),
     IsSuspect BIT NOT NULL DEFAULT 0,
     

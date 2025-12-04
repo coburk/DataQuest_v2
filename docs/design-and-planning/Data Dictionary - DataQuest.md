@@ -14,10 +14,11 @@ The Data Dictionary defines the purpose, constraints, and data types for all cor
 |                         | `CaseTitle`         | `VARCHAR(100)`    | Not Null                 | Narrative title of the case.                             |
 |                         | `InitialPrompt`     | `VARCHAR(MAX)`    | Not Null                 | The starting story prompt for the student.               |
 |                         | `Conclusion`        | `VARCHAR(MAX)`    | Nullable                 | The resolved narrative upon solving the case.            |
-| **Persons**       | `PersonID`          | `INT`             | PK, Not Null             | Unique ID for any individual (suspect, witness, victim). |
-|                         | `Name`              | `VARCHAR(50)`     | Not Null                 | Full name of the person.                                 |
-|                         | `Role`              | `VARCHAR(50)`     | Not Null                 | E.g., 'Suspect', 'Witness', 'Victim'.                    |
-|                         | `IsSuspect`         | `BIT`             | Not Null                 | Boolean flag (0=No, 1=Yes).                              |
+| **Persons**       | `PersonID`          | `INT`        | PK, Not Null  | Unique ID for any individual (suspect, witness, victim). |
+|         | `FirstName`         | `VARCHAR(50)`     | Not Null     | First name of the person.         |
+| | `LastName` | `VARCHAR(50)`     | Not Null    | Last name of the person.  |
+|       | `Role`              | `VARCHAR(50)`     | Not Null         | E.g., 'Suspect', 'Witness', 'Victim'.   |
+|   | `IsSuspect`         | `BIT`       | Not Null                 | Boolean flag (0=No, 1=Yes).      |
 | **Locations**     | `LocationID`        | `INT`             | PK, Not Null             | Unique ID for a physical place.                          |
 |                         | `Name`              | `VARCHAR(100)`    | Not Null                 | E.g., 'Warehouse A', 'Cafe Corner'.                      |
 |                         | `Address`           | `VARCHAR(255)`    | Not Null                 | Physical location for mapping.                           |
