@@ -27,7 +27,8 @@ Establish a rigorous change management framework to:
 
 ```
 ✅ 10-week timeline (Weeks 1-10)
-✅ 8 AI agents required
+✅ 3 AI Agents required (Database Agent, Case Planner Agent, Query Tutor Agent)
+✅ 1 Rule-Based Validator (SQL Enforcer)
 ✅ At least 1 complete case required
 ✅ Deliverables defined by Week 10
 ✅ User stories US-01 through US-10
