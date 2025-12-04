@@ -358,83 +358,85 @@ Core learning interface where student solves SQL cases
 Coordinate Query Tutor and Database Agent
 Display evidence/context
 Enable query submission
+INLINE RESULTS DISPLAY with collapsible panels
 ```
 
 #### Layout Structure
 
 ```
 ┌────────────────────────────────────────────────────────────┐
-│  DataQuest: SQL Detective             [?]  [Tier] [←Back]  │
+│  DataQuest: SQL Detective [?]  [Tier] [←Back]  │
 ├────────────────────────────────────────────────────────────┤
-│                                                            │
+││
 │  Case: The Missing Code    ⏱ 12:34 / 15 min               │
-│  Junior Data Analyst  |  Step 1 of 3                       │
+│  Junior Data Analyst  |  Step 1 of 3  │
 │  ──────────────────────────────────────────────────────────│
-│                                                            │
+││
 │  ┌─────────────────────────────────────────────────────┐   │
-│  │ CASE NARRATIVE                                      │   │
+│  │ CASE NARRATIVE [−]   │   │
 │  ├─────────────────────────────────────────────────────┤   │
-│  │                                                     │   │
-│  │ You're a Junior Data Analyst investigating a        │   │
+│  │       │   │
+│  │ You're a Junior Data Analyst investigating a      │   │
 │  │ customer complaint. A code was entered but never    │   │
 │  │ recorded in the system. Find all missing codes      │   │
-│  │ from the CodeLog table.                             │   │
-│  │                                                     │   │
-│  │ Available tables: CodeLog, Customers                │   │
-│  │                                                     │   │
+│  │ from the CodeLog table.           │   │
+│  │            │   │
+│  │ Available tables: CodeLog, Customers     │   │
+│  │        │   │
 │  └─────────────────────────────────────────────────────┘   │
-│                                                            │
+│       │
 │  ┌─────────────────────────────────────────────────────┐   │
-│  │ CURRENT QUESTION                                    │   │
+││ CURRENT QUESTION [−]         │   │
 │  ├─────────────────────────────────────────────────────┤   │
-│  │                                                     │   │
+│  │             │   │
 │  │ Q: Which customer codes have Status = 'Missing'?    │   │
-│  │                                                     │   │
-│  │ [? Help]  [💡 Hint]  [📊 Schema]                    │   │
-│  │                                                     │   │
-│  │ Your Query:                                         │   │
-│  │ ┌─────────────────────────────────────────────────┐ │   │
-│  │ │ SELECT CustomerID, Code                         │ │   │
-│  │ │ FROM CodeLog                                    │ │   │
-│  │ │ WHERE Status = 'Missing'                        │ │   │
-│  │ │                                                 │ │   │
-│  │ │                                                 │ │   │
-│  │ └─────────────────────────────────────────────────┘ │   │
-│  │                                                     │   │
+│  │         │   │
+│  │ [? Help]  [💡 Hint]  [📊 Schema]      │   │
+│  │          │   │
+│  └─────────────────────────────────────────────────────┘   │
+│        │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │ YOUR QUERY [−] [↔ Split View]            │ │
+│  ├─────────────────────────────────────────────────────┤   │
+│  │              │ │
+│  │ SELECT CustomerID, Code     │   │
+│  │ FROM CodeLog         │   │
+│  │ WHERE Status = 'Missing'          │   │
+│  │      │   │
 │  │ [SUBMIT QUERY] [CLEAR] [Copy from earlier]          │   │
-│  │                                                     │   │
+│  │              │   │
 │  └─────────────────────────────────────────────────────┘   │
-│                                                            │
-│  Agent Responses:                                          │
+│               │
 │  ┌─────────────────────────────────────────────────────┐   │
-│  │ QUERY TUTOR HINTS                                   │   │
+│  │ RESULTS [−] (23 rows)   ✅ CORRECT!      │   │
 │  ├─────────────────────────────────────────────────────┤   │
-│  │                                                     │   │
-│  │ Q: What tables contain the information we need?     │   │
-│  │                                                     │   │
-│  │ A: The CodeLog table contains code records with     │   │
-│  │    their status. The Customers table has customer   │   │
-│  │    information if needed.                           │   │
-│  │                                                     │   │
-│  │ Ready for next hint? [Hint Level: 1/6]  [MORE]      │   │
-│  │                                                     │   │
+│  │         │   │
+│  │ CustomerID  Code         │   │
+│  │ ──────────────────────           │   │
+│  │ 101       ABC123                  │   │
+│  │ 102     DEF456              │   │
+│  │ 103         GHI789        │   │
+│  │ ...     ...    │   │
+│  │           │   │
+│  │ ✅ You identified all 23 missing codes!       │   │
+│  │    │   │
+│  │ [NEXT QUESTION] [REVIEW QUERY]           │   │
+│  ││   │
 │  └─────────────────────────────────────────────────────┘   │
-│                                                            │
+│           │
+│  Agent Responses:  │
 │  ┌─────────────────────────────────────────────────────┐   │
-│  │ DATABASE SCHEMA                                     │   │
-│  ├─────────────────────────────────────────────────────┤   │
-│  │                                                     │   │
-│  │ CodeLog Table:                                      │   │
-│  │ - CodeID (unique identifier)                        │   │
-│  │ - CustomerID (which customer)                       │   │
-│  │ - Code (the code value)                             │   │
-│  │ - Status (Missing, Active, Closed)                  │   │
-│  │ - CreatedDate (when it was entered)                 │   │
-│  │                                                     │   │
-│  │ [View full schema] [Ask about column]               │   │
-│  │                                                     │   │
+│  │ QUERY TUTOR HINTS [+]         │   │
+│  ├─────────────────────────────────────────────────────┤
+│  │ (Collapsed - click to expand)     │   │
 │  └─────────────────────────────────────────────────────┘   │
-│                                                            │
+│     │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │ DATABASE SCHEMA [+]      │   │
+│  ├─────────────────────────────────────────────────────┤
+│  │ (Collapsed - click to expand)                │   │
+│  └─────────────────────────────────────────────────────┘   │
+│                │
 └────────────────────────────────────────────────────────────┘
 ```
 
@@ -460,11 +462,12 @@ INTERACTIVE ELEMENTS:
 ```
 PURPOSE: Set investigation context and tone
 DESIGN:
-├─ Professional, investigative language (not "Find the bug!")
+├─ Collapsible: Click [−] to collapse, [+] to expand
+├─ Professional, investigative language
 ├─ Clear investigation goal
 ├─ Available tables listed
 ├─ 2-3 paragraphs max (keep focused)
-└─ Available schema reference
+└─ Default state: EXPANDED
 
 EXAMPLE (Tier 1):
 "You're a Junior Data Analyst investigating a customer 
@@ -482,13 +485,14 @@ the underlying contradiction."
 ```
 PURPOSE: Show current investigation step
 DESIGN:
+├─ Collapsible: Click [−] to collapse
 ├─ Clear question phrasing
 ├─ Links to help resources (Hint, Schema)
 ├─ Focuses student on specific task
-└─ Builds on previous step (if applicable)
+└─ Default state: EXPANDED
 
 TIER ADAPTATION:
-Tier 1: "Which customer codes have Status = 'Missing'?"
+Tier 1: "Which customer codes have Status = 'Missing'?
 Tier 3: "What data quality issues can you identify in 
       the CodeLog table? How would you verify them?"
 Tier 5: "What multiple interpretations of this data are 
@@ -499,12 +503,13 @@ Tier 5: "What multiple interpretations of this data are
 ```
 PURPOSE: Enable SQL query writing
 DESIGN:
+├─ Collapsible: Click [−] to collapse
 ├─ Syntax-highlighted text area
 ├─ Line numbers
 ├─ Monospace font (SQL standard)
 ├─ Auto-indent support
-├─ Basic formatting (if applicable)
-└─ Clear visual boundary
+├─ Split View toggle button: [↔ Split View]
+└─ Default state: EXPANDED
 
 FEATURES:
 - Syntax highlighting for SQL keywords
@@ -515,6 +520,12 @@ FEATURES:
 - Character count or size indicator
 
 HEIGHT: 200-300px (enough to see queries)
+
+SPLIT VIEW (Desktop 1200px+):
+- [↔ Split View] button in header
+- Toggles to side-by-side layout
+- Editor on left (50%), Results on right (50%)
+- Responsive: Tablet/Mobile use stacked layout
 ```
 
 **Query Editor Controls:**
@@ -523,7 +534,7 @@ PURPOSE: Submit, manage, and reference queries
 DESIGN:
 ├─ [SUBMIT QUERY] - Primary action (prominent)
 ├─ [CLEAR] - Secondary action
-└─ [View prior attempts] - Tertiary action
+└─ [Copy from earlier] - Tertiary action
 
 STATES:
 - Submit button: Active when query present
@@ -532,15 +543,40 @@ STATES:
 - Success/error state after submission
 ```
 
+**Results Panel (NEW - INLINE):**
+```
+PURPOSE: Display query results immediately on same screen
+DESIGN:
+├─ Collapsible: Click [−] to collapse, [+] to expand
+├─ Appears immediately after query submission
+├─ Shows on Screen 3 (not separate Screen 4)
+├─ Visual status indicator: ✅ CORRECT! / ⚠️ Not quite / ❌ Error
+└─ Default state: EXPANDED (when results available)
+
+DISPLAY ELEMENTS:
+- Result count: "23 rows"
+- Status message: "✅ You identified all 23 missing codes!"
+- Data table: Column headers + first 20-50 rows
+- Pagination: If more than 50 rows
+- Action buttons: [NEXT QUESTION] [REVIEW QUERY]
+
+VISUAL HIERARCHY:
+1. Status (✅/⚠️/❌) - Most prominent
+2. Results table - Secondary
+3. Feedback message - Below results
+4. Action buttons - Bottom
+```
+
 **Query Tutor Panel:**
 ```
 PURPOSE: Display agent guidance
 DESIGN:
+├─ Collapsible: Click [−] to collapse, [+] to expand
 ├─ Label: "QUERY TUTOR HINTS"
-├─ Current hint or question
+├─ Shows current hint or question
 ├─ Escalation level indicator: "Level 1/6"
 ├─ [MORE] button for next level
-└─ Encouraging tone
+└─ Default state: COLLAPSED (save screen space)
 
 DISPLAY PATTERNS:
 - Question at Level 1: "What tables contain...?"
@@ -550,6 +586,7 @@ DISPLAY PATTERNS:
 
 INTERACTION:
 - [MORE] button: Request next hint level
+- Click header to expand when needed
 - Auto-escalate if stuck (configurable)
 - Clear history button (optional)
 ```
@@ -558,11 +595,12 @@ INTERACTION:
 ```
 PURPOSE: Provide schema information on demand
 DESIGN:
+├─ Collapsible: Click [−] to collapse, [+] to expand
 ├─ Label: "DATABASE SCHEMA"
 ├─ Relevant table descriptions
 ├─ Key columns listed
 ├─ Data type and constraints
-└─ Examples or notes
+└─ Default state: COLLAPSED (save screen space)
 
 DISPLAY:
 - Show only relevant tables for current question
@@ -576,212 +614,83 @@ INTERACTION:
 - Search for specific table/column
 ```
 
-**Evidence/Timeline Panel (Optional):**
+**Collapsible Panel Behavior:**
 ```
-PURPOSE: Display case evidence (if applicable)
-DESIGN:
-├─ Timeline view or evidence grid
-├─ Key facts from investigation
-├─ Data quality issues
-└─ Relevant findings
+MECHANICS:
+- Click [−] in header → Section collapses, shows [+]
+- Click [+] → Section expands, shows [−]
+- Animation: 200ms slide transition
+- State persists during session
+- State resets on new question
 
-DISPLAY:
-- Text or table format
-- Highlight key information
-- Reference to query results (if applicable)
-- Notes about contradictions
+DEFAULT STATES (MVP):
+✓ EXPANDED:  Case Narrative (context needed)
+✓ EXPANDED:  Current Question (primary focus)
+✓ EXPANDED:  Your Query (where student works)
+✓ EXPANDED:  Results (feedback when available)
+✗ COLLAPSED: Query Tutor (expand for help)
+✗ COLLAPSED: Database Schema (expand for reference)
+
+REASONING:
+- Show critical elements by default
+- Hints/Schema collapse to reduce visual clutter
+- Student controls what they see
 ```
 
 ---
 
-### Screen 4: Query Results Screen
+### Screen 4: Query Results Screen (OPTIONAL - For Review/History)
 
 #### Purpose
 ```
-Show query results and evaluation
-Provide feedback (correct/incorrect)
-Display suggestions for next step
+DEPRECATED - Results now display inline on Screen 3
+This screen is now OPTIONAL, used only for:
+- Detailed result review (if student clicks [REVIEW QUERY])
+- Historical query results browsing
+- Advanced analysis view (Phase 2+)
+
+PRIMARY WORKFLOW: All results shown on Screen 3
 ```
 
-#### Layout Structure (Success Path)
+#### Layout Structure (Optional Review View)
 
 ```
 ┌────────────────────────────────────────────────────────────┐
 │  DataQuest: SQL Detective     [?]  [Tier] [←Back]          │
 ├────────────────────────────────────────────────────────────┤
-│                                                            │
-│  ✅ CORRECT! Excellent Query!                              │
+│      │
+│  ✅ CORRECT! Excellent Query!        │
 │  ──────────────────────────────────────────────────────────│
-│                                                            │
-│  Your Query:                                               │
+│     │
+│  Your Query:    │
 │  ┌──────────────────────────────────────────────────────┐  │
-│  │ SELECT CustomerID, Code                              │  │
-│  │ FROM CodeLog                                         │  │
-│  │ WHERE Status = 'Missing'                             │  │
-│  └──────────────────────────────────────────────────────┘  │
-│                                                            │
-│  Results (23 rows):                                        │
+│  │ SELECT CustomerID, Code │  │
+│  │ FROM CodeLog   │  │
+│  │ WHERE Status = 'Missing'    │  │
+│  └──────────────────────────────────────────────────────┘│
+│      │
+│  Results (23 rows):         │
 │  ┌──────────────────────────────────────────────────────┐  │
-│  │ CustomerID  Code                                     │  │
-│  │ ──────────────────────                               │  │
-│  │ 101         ABC123                                   │  │
-│  │ 102         DEF456                                   │  │
-│  │ 103         GHI789                                   │  │
-│  │ ...         ...                                      │  │
+│  │ CustomerID  Code     │  │
+│  │ ──────────────────────      │  │
+│  │ 101    ABC123       │  │
+│  │ 102         DEF456             │  │
+│  │ 103       GHI789      │  │
+│  │ ...         ...     │  │
 │  └──────────────────────────────────────────────────────┘  │
-│                                                            │
-│  ✅ You identified all 23 missing codes!                   │
-│                                                            │
-│  What you did right:                                       │
-│  • Selected relevant columns                               │
-│  • Filtered for correct status                             │
-│  • Retrieved all matching records                          │
-│                                                            │
-│  Ready for next question?                                  │
-│                                                            │
+│     │
+│  ✅ You identified all 23 missing codes!             │
+│  │
+│  What you did right:   │
+│  • Selected relevant columns           │
+│  • Filtered for correct status      │
+│  • Retrieved all matching records        │
+│              │
+│  Ready for next question?    │
+│            │
 │[NEXT QUESTION] [REVIEW QUERY] [CONTINUE INVESTIGATION]     │
-│                                                            │
+│         │
 └────────────────────────────────────────────────────────────┘
-```
-
-#### Layout Structure (Incorrect Path)
-
-```
-┌────────────────────────────────────────────────────────────┐
-│  DataQuest: SQL Detective              [?]  [Tier] [←Back] │
-├────────────────────────────────────────────────────────────┤
-│                                                            │
-│  ⚠️ Query executed, but result doesn't match expectations  │
-│  ──────────────────────────────────────────────────────────│
-│                                                            │
-│  Your Query:                                               │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │ SELECT *                                             │  │
-│  │ FROM CodeLog                                         │  │
-│  └──────────────────────────────────────────────────────┘  │
-│                                                            │
-│  Results (1,247 rows returned)                             │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │ [Showing first 20 of 1,247 rows]                     │  │
-│  │ CodeID  CustomerID  Code  Status  CreatedDate        │  │
-│  │ ──────────────────────────────────────────────────   │  │
-│  │ 1     101        ABC123  Active  2025-01-01          │  │
-│  │ 2       102   DEF456  Active  2025-01-01             │  │
-│  │ ...     ...  ...     ...     ...                     │  │
-│  └──────────────────────────────────────────────────────┘  │
-│                                                            │
-│  Hmm, let me ask: Does your result answer the question?    │
-│                                                            │
-│  Query Tutor Analysis:                                     │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │ Your query returns 1,247 rows, but we're looking     │  │
-│  │ for just the missing codes. Let's think about it:    │  │
-│  │                                                      │  │
-│  │ How would you filter to show ONLY the ones with      │  │
-│  │ Status = 'Missing'?                                  │  │
-│  │                                                      │  │
-│  │ [Hint Level: 2/6]  [MORE HELP]                       │  │
-│  └──────────────────────────────────────────────────────┘  │
-│                                                            │
-│  [TRY AGAIN] [CLEAR QUERY] [PREVIOUS ATTEMPT]              │
-│                                                            │
-└────────────────────────────────────────────────────────────┘
-```
-
-#### Key Elements
-
-**Result Header:**
-```
-PURPOSE: Immediately show correctness
-DESIGN:
-- ✅ CORRECT! (with celebratory tone)
-- ⚠️ Not quite right (encouraging, not discouraging)
-- ❌ Error message (if syntax error or database issue)
-
-TONE:
-- Success: "Excellent Query!", "Perfect!"
-- Near-correct: "You're on the right track..."
-- Incorrect: "Let me ask... does your result..."
-- Error: "SQL error at line X: ..."
-```
-
-**Query Display (Read-only):**
-```
-PURPOSE: Show what student submitted
-DESIGN:
-- Syntax-highlighted
-- Line numbers
-- Read-only display
-- Copy button (optional)
-- Clear boundary
-
-USE CASE:
-Students can see exactly what ran
-Helps debug from Query Tutor feedback
-Reference for next attempt
-```
-
-**Results Table:**
-```
-PURPOSE: Show query results
-DESIGN:
-- Column headers
-- Data rows (max 20-50 visible, paginated if more)
-- Result count ("23 rows returned")
-- Scrollable/pageable if large
-
-DISPLAY:
-- Monospace font for data
-- Clear column separation
-- Null values indicated clearly
-- Truncate long text (with expand option)
-```
-
-**Feedback Section:**
-```
-PURPOSE: Guide student learning
-DESIGN:
-
-SUCCESS:
-- "What you did right:"
-  ├─ Identified correct tables
-  ├─ Used proper WHERE logic
-  └─ Retrieved complete results
-- Celebratory message
-- Next question or investigation step
-
-INCORRECT:
-- Query Tutor explanation
-- Socratic question about result
-- Hint escalation option
-- "Try Again" button
-
-ERROR:
-- Error message with line reference
-- Suggestion for fix
-- Link to syntax help
-```
-
-**Action Buttons:**
-```
-PURPOSE: Enable next action
-DESIGN:
-
-SUCCESS:
-- [NEXT QUESTION] - Primary action
-- [REVIEW QUERY] - Show explanation (optional)
-- [CONTINUE INVESTIGATION] - Skip to next step
-
-INCORRECT:
-- [TRY AGAIN] - Return to editor
-- [CLEAR QUERY] - Start fresh
-- [GET MORE HELP] - Escalate hint level
-- [PREVIOUS ATTEMPT] - Review prior query
-
-ERROR:
-- [BACK TO EDITOR] - Return to editor
-- [SYNTAX HELP] - Show SQL syntax help
-- [CLEAR QUERY] - Start fresh
 ```
 
 ---
@@ -1057,41 +966,94 @@ Show analytics (Phase 3+)
 
 ```
 DESKTOP (1200px+):
-- Full multi-panel layout
-- Side-by-side agent panels
-- Large query editor
-- All information visible
+- Full multi-panel layout with collapsible sections
+- Split View option available: [↔ Split View] toggles editor/results side-by-side
+- Large query editor (300px+ height)
+- All panels visible (user can collapse as needed)
+- Side-by-side: Editor (50%) | Results (50%)
 
 TABLET (768px - 1199px):
-- Single column with tabs
+- Single column with collapsible sections
 - Stacked agent panels
-- Medium query editor
-- Scrollable content
+- Medium query editor (250px height)
+- Scrollable content with collapse/expand management
+- Tabs: [Query Editor | Results] when split view active
 
 MOBILE (< 768px):
-- Single column layout (Phase 3+, if supported)
-- Modal dialogs for schema/hints
+- Single column layout with collapsible sections
+- Modal dialogs for schema/hints (Phase 3+)
 - Full-width query editor
+- Stacked layout: Query → Results (scrollable)
 - Bottom navigation
 ```
 
 ### Query Editor Adaptation
 
 ```
-DESKTOP:
-- 300px+ height
-- Side-by-side with results
-- Syntax highlighting full
+DESKTOP (1200px+):
+- Default: 300px+ height
+- Split View option: Editor (50% width) | Results (50% width)
+- Syntax highlighting: Full
+- Side-by-side comparison view
 
-TABLET:
-- 250px height
-- Above/below results (tabbed)
-- Syntax highlighting simplified
+TABLET (768px - 1199px):
+- Height: 250px
+- Width: 100% (full column)
+- Tabs: [Query Editor | Results]
+- Syntax highlighting: Simplified (less visual overhead)
+- Collapsible results above/below as needed
 
-MOBILE:
-- Keyboard-aware layout
-- Full-width query box
+MOBILE (< 768px):
+- Height: 200px (keyboard-aware on mobile)
+- Width: 100% (full screen)
 - Results below (scrollable)
+- Stacked layout (no side-by-side)
+```
+
+### Collapsible Panel Behavior
+
+```
+DESKTOP (1200px+):
+- User can collapse/expand any panel
+- Collapse state persists during session
+- Recommended: Keep Results expanded (primary feedback)
+- Recommended: Collapse Hints/Schema (on demand)
+
+TABLET (768px - 1199px):
+- Panel collapse/expand essential for space management
+- Default: Only show 1-2 expanded panels
+- Others available via collapse/expand
+- Swipe gestures optional (Phase 3+)
+
+MOBILE (< 768px):
+- Collapse/expand critical for usability
+- Smaller screens benefit from panel hiding
+- Default: Query and Results expanded
+- Hints/Schema collapsed by default
+- One-finger scroll through collapsed sections
+```
+
+### Split View Toggle
+
+```
+LOCATION: [↔ Split View] button in Query Editor header
+
+DESKTOP (1200px+):
+- Button visible and functional
+- Click toggles: Stacked ↔ Side-by-side
+- Side-by-side: 50% | 50% split
+- Preference persists during session
+
+TABLET (768px - 1199px):
+- Button visible but less useful
+- Default: Stacked layout (limited width)
+- Optional: Could enable tablet split at landscape orientation
+- Graceful degradation: Ignores if space insufficient
+
+MOBILE (< 768px):
+- Button visible for consistency
+- Disabled: No split possible (too narrow)
+- Tooltips: "Split view available on larger screens"
 ```
 
 ---
@@ -1260,16 +1222,22 @@ NICE TO HAVE:
 [ ] Plan color scheme (accessibility-focused)
 [ ] Define typography system
 [ ] Create component library
+[ ] Design collapsible panel states (collapsed/expanded)
+[ ] Design split view layouts
+[ ] Validate information density with panels
 ```
 
 ### High-Fidelity Design
 
 ```
-[ ] Design all screen states
-[ ] Create interactive prototypes
+[ ] Design all screen states (including collapsed states)
+[ ] Create interactive prototypes with collapse/expand
+[ ] Prototype split view for desktop
 [ ] Validate with accessibility tools
 [ ] Test with users (sample students)
 [ ] Iterate based on feedback
+[ ] Document panel default states
+[ ] Create animation specifications (200ms transitions)
 ```
 
 ### Development Handoff
@@ -1280,6 +1248,24 @@ NICE TO HAVE:
 [ ] Create design system documentation
 [ ] Prepare visual assets
 [ ] Define CSS standards
+[ ] Specify collapse/expand animations
+[ ] Document split view breakpoints
+[ ] Define responsive behavior per screen size
+```
+
+### Development Tasks
+
+```
+[ ] Implement Screen 3 with inline results display
+[ ] Implement collapsible panel components
+[ ] Implement expand/collapse state management
+[ ] Implement split view toggle (desktop 1200px+)
+[ ] Implement responsive layouts
+[ ] Implement state persistence (session-based)
+[ ] Connect Query Service to Results Panel
+[ ] Handle all result states (correct/incorrect/error)
+[ ] Test animation performance
+[ ] Ensure accessible keyboard navigation
 ```
 
 ### Quality Assurance
@@ -1289,8 +1275,14 @@ NICE TO HAVE:
 [ ] Test responsive design (all breakpoints)
 [ ] Validate accessibility (WCAG 2.1 AA)
 [ ] Test keyboard navigation
-[ ] Test touch interactions
-[ ] Validate performance metrics
+[ ] Test collapse/expand functionality
+[ ] Test split view on desktop
+[ ] Test state persistence
+[ ] Validate performance (no lag on collapse/expand)
+[ ] Test touch interactions (tablet)
+[ ] Validate mobile scrolling behavior
+[ ] Test all result types (correct/incorrect/error/timeout)
+[ ] Verify information hierarchy maintained
 ```
 
 ---
@@ -1298,6 +1290,13 @@ NICE TO HAVE:
 ## 🎓 Conclusion
 
 The UI/UX Design is where DataQuest's pedagogical mission becomes reality. This specification ensures that every interface element—from tier badges to agent responses—reinforces the core principle: students are progressing through authentic career roles by solving real SQL challenges, not playing a game.
+
+**Enhanced by Approved UX Improvements (December 3, 2025):**
+- ✅ Inline results display on Screen 3 (no screen switching)
+- ✅ Collapsible panels for efficient space management
+- ✅ Split view option for professional IDE experience (desktop)
+- ✅ Immediate feedback loop (pedagogically sound)
+- ✅ Professional SQL workflow alignment
 
 **Key Success Factors:**
 
@@ -1308,9 +1307,12 @@ The UI/UX Design is where DataQuest's pedagogical mission becomes reality. This 
 5. **Accessibility** - WCAG 2.1 AA compliance
 6. **Responsiveness** - Works on all devices
 7. **Agent coordination** - Seamless Query Tutor + Database Agent
+8. **Efficient Space Management** - Collapsible panels for clean UI
+9. **Professional Workflow** - Inline results match real SQL IDEs
+10. **Immediate Feedback** - Results displayed instantly for faster learning
 
 ---
 
 **IMPLEMENTATION SPECIFICATION COMPLETE:** December 3, 2025  
-**Status:** ✅ **READY FOR DESIGN & DEVELOPMENT**
+**Status:** ✅ **READY FOR DESIGN & DEVELOPMENT** (WITH APPROVED ENHANCEMENTS)
 
