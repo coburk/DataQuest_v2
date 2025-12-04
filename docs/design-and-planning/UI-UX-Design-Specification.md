@@ -365,78 +365,78 @@ INLINE RESULTS DISPLAY with collapsible panels
 
 ```
 ┌────────────────────────────────────────────────────────────┐
-│  DataQuest: SQL Detective [?]  [Tier] [←Back]  │
+│  DataQuest: SQL Detective [?]  [Tier] [←Back]              │
 ├────────────────────────────────────────────────────────────┤
-││
+│                                                            │
 │  Case: The Missing Code    ⏱ 12:34 / 15 min               │
-│  Junior Data Analyst  |  Step 1 of 3  │
+│  Junior Data Analyst  |  Step 1 of 3                       │
 │  ──────────────────────────────────────────────────────────│
-││
+│                                                            │
 │  ┌─────────────────────────────────────────────────────┐   │
-│  │ CASE NARRATIVE [−]   │   │
+│  │ CASE NARRATIVE [−]                                  │   │
 │  ├─────────────────────────────────────────────────────┤   │
-│  │       │   │
-│  │ You're a Junior Data Analyst investigating a      │   │
+│  │                                                     │   │
+│  │ You're a Junior Data Analyst investigating a        │   │
 │  │ customer complaint. A code was entered but never    │   │
 │  │ recorded in the system. Find all missing codes      │   │
-│  │ from the CodeLog table.           │   │
-│  │            │   │
-│  │ Available tables: CodeLog, Customers     │   │
-│  │        │   │
+│  │ from the CodeLog table.                             │   │
+│  │                                                     │   │
+│  │ Available tables: CodeLog, Customers                │   │
+│  │                                                     │   │
 │  └─────────────────────────────────────────────────────┘   │
-│       │
+│                                                            │
 │  ┌─────────────────────────────────────────────────────┐   │
-││ CURRENT QUESTION [−]         │   │
+││ CURRENT QUESTION [−]                                  │   │
 │  ├─────────────────────────────────────────────────────┤   │
-│  │             │   │
+│  │                                                     │   │
 │  │ Q: Which customer codes have Status = 'Missing'?    │   │
-│  │         │   │
-│  │ [? Help]  [💡 Hint]  [📊 Schema]      │   │
-│  │          │   │
+│  │                                                     │   │
+│  │ [? Help]  [💡 Hint]  [📊 Schema]                    │   │
+│  │                                                     │   │
 │  └─────────────────────────────────────────────────────┘   │
-│        │
+│                                                            │
 │  ┌─────────────────────────────────────────────────────┐   │
-│  │ YOUR QUERY [−] [↔ Split View]            │ │
+│  │ YOUR QUERY [−] [↔ Split View]                       │   │
 │  ├─────────────────────────────────────────────────────┤   │
-│  │              │ │
-│  │ SELECT CustomerID, Code     │   │
-│  │ FROM CodeLog         │   │
-│  │ WHERE Status = 'Missing'          │   │
-│  │      │   │
+│  │                                                     │   │
+│  │ SELECT CustomerID, Code                             │   │
+│  │ FROM CodeLog                                        │   │
+│  │ WHERE Status = 'Missing'                            │   │
+│  │                                                     │   │
 │  │ [SUBMIT QUERY] [CLEAR] [Copy from earlier]          │   │
-│  │              │   │
+│  │                                                     │   │
 │  └─────────────────────────────────────────────────────┘   │
-│               │
+│                                                            │
 │  ┌─────────────────────────────────────────────────────┐   │
-│  │ RESULTS [−] (23 rows)   ✅ CORRECT!      │   │
+│  │ RESULTS [−] (23 rows)   ✅ CORRECT!                 │   │
 │  ├─────────────────────────────────────────────────────┤   │
-│  │         │   │
-│  │ CustomerID  Code         │   │
-│  │ ──────────────────────           │   │
-│  │ 101       ABC123                  │   │
-│  │ 102     DEF456              │   │
-│  │ 103         GHI789        │   │
-│  │ ...     ...    │   │
-│  │           │   │
-│  │ ✅ You identified all 23 missing codes!       │   │
-│  │    │   │
-│  │ [NEXT QUESTION] [REVIEW QUERY]           │   │
-│  ││   │
+│  │                                                     │   │
+│  │ CustomerID  Code                                    │   │
+│  │ ──────────────────────                              │   │
+│  │ 101       ABC123                                    │   │
+│  │ 102     DEF456                                      │   │
+│  │ 103         GHI789                                  │   │
+│  │ ...     ...                                         │   │
+│  │                                                     │   │
+│  │ ✅ You identified all 23 missing codes!             │   │
+│  │                                                     │   │
+│  │ [NEXT QUESTION] [REVIEW QUERY]                      │   │
+│  │                                                     │   │
 │  └─────────────────────────────────────────────────────┘   │
-│           │
-│  Agent Responses:  │
+│                                                            │
+│  Agent Responses:                                          │
 │  ┌─────────────────────────────────────────────────────┐   │
-│  │ QUERY TUTOR HINTS [+]         │   │
-│  ├─────────────────────────────────────────────────────┤
-│  │ (Collapsed - click to expand)     │   │
+│  │ QUERY TUTOR HINTS [+]                               │   │
+│  ├─────────────────────────────────────────────────────┤   |
+│  │ (Collapsed - click to expand)                       │   │
 │  └─────────────────────────────────────────────────────┘   │
-│     │
+│                                                            │
 │  ┌─────────────────────────────────────────────────────┐   │
-│  │ DATABASE SCHEMA [+]      │   │
-│  ├─────────────────────────────────────────────────────┤
-│  │ (Collapsed - click to expand)                │   │
+│  │ DATABASE SCHEMA [+]                                 │   │
+│  ├─────────────────────────────────────────────────────┤   |
+│  │ (Collapsed - click to expand)                       │   │
 │  └─────────────────────────────────────────────────────┘   │
-│                │
+│                                                            │
 └────────────────────────────────────────────────────────────┘
 ```
 
@@ -658,38 +658,38 @@ PRIMARY WORKFLOW: All results shown on Screen 3
 ┌────────────────────────────────────────────────────────────┐
 │  DataQuest: SQL Detective     [?]  [Tier] [←Back]          │
 ├────────────────────────────────────────────────────────────┤
-│      │
-│  ✅ CORRECT! Excellent Query!        │
+│                                                            │
+│  ✅ CORRECT! Excellent Query!                              │
 │  ──────────────────────────────────────────────────────────│
-│     │
-│  Your Query:    │
+│                                                            │
+│  Your Query:                                               │
 │  ┌──────────────────────────────────────────────────────┐  │
-│  │ SELECT CustomerID, Code │  │
-│  │ FROM CodeLog   │  │
-│  │ WHERE Status = 'Missing'    │  │
-│  └──────────────────────────────────────────────────────┘│
-│      │
-│  Results (23 rows):         │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │ CustomerID  Code     │  │
-│  │ ──────────────────────      │  │
-│  │ 101    ABC123       │  │
-│  │ 102         DEF456             │  │
-│  │ 103       GHI789      │  │
-│  │ ...         ...     │  │
+│  │ SELECT CustomerID, Code                              │  │
+│  │ FROM CodeLog                                         │  │
+│  │ WHERE Status = 'Missing'                             │  │
 │  └──────────────────────────────────────────────────────┘  │
-│     │
-│  ✅ You identified all 23 missing codes!             │
-│  │
-│  What you did right:   │
-│  • Selected relevant columns           │
-│  • Filtered for correct status      │
-│  • Retrieved all matching records        │
-│              │
-│  Ready for next question?    │
-│            │
+│                                                            │
+│  Results (23 rows):                                        │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │ CustomerID  Code                                     │  │
+│  │ ──────────────────────                               │  │
+│  │ 101    ABC123                                        │  │
+│  │ 102         DEF456                                   │  │
+│  │ 103       GHI789                                     │  │
+│  │ ...         ...                                      │  │
+│  └──────────────────────────────────────────────────────┘  │
+│                                                            │
+│  ✅ You identified all 23 missing codes!                   │
+│                                                            │
+│  What you did right:                                       │
+│  • Selected relevant columns                               │
+│  • Filtered for correct status                             │
+│  • Retrieved all matching records                          │
+│                                                            │
+│  Ready for next question?                                  │
+│                                                            │
 │[NEXT QUESTION] [REVIEW QUERY] [CONTINUE INVESTIGATION]     │
-│         │
+│                                                            │
 └────────────────────────────────────────────────────────────┘
 ```
 
