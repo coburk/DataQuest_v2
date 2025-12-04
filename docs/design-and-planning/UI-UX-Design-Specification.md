@@ -7,6 +7,20 @@
 
 ---
 
+**SOURCE OF TRUTH TRACKING**
+
+**COMPLIANCE STATUS:** ✅ PROPOSAL-COMPLIANT (with approved extensions)  
+**SOURCE OF TRUTH:** 
+- Tier 1: `docs/proposal/DataQuest-Project-Proposal.md` (Appendix A: UI Mockups)
+- Tier 3: This document
+
+**CHANGE REQUESTS:** CR002 (Approved Extensions - Phase 2/3 forward-looking design)  
+**CAPSTONE IMPACT:** ZERO (all extensions clearly marked Phase 2/3+)  
+**LAST COMPLIANCE REVIEW:** December 3, 2025  
+**REVIEWED BY:** Systematic Compliance Review
+
+---
+
 ## 📋 Document Purpose
 
 This specification defines the user interface and user experience for DataQuest: SQL Detective. It operationalizes the tier system, agent coordination, and pedagogical principles into concrete visual and interaction patterns that make learning SQL engaging and intuitive.
