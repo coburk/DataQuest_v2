@@ -7,6 +7,19 @@
 
 ---
 
+**SOURCE OF TRUTH TRACKING**
+
+**COMPLIANCE STATUS:** ✅ PROPOSAL-COMPLIANT  
+**SOURCE OF TRUTH:** 
+- Tier 1: `docs/proposal/DataQuest-Project-Proposal.md` (Week 6: US-06)
+- Tier 3: This document
+
+**CHANGE REQUESTS:** NONE  
+**LAST COMPLIANCE REVIEW:** December 3, 2025  
+**REVIEWED BY:** Systematic Compliance Review
+
+---
+
 ## 📋 Document Purpose
 
 This specification defines how the Query Tutor Agent operationalizes the Socratic method for SQL query development. It transforms the pedagogical principles in the Official Design Guideline into concrete, implementable behavior patterns.
