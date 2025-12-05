@@ -1,15 +1,27 @@
-# Database Schema & Migrations Strategy
+# 📋 DATABASE SCHEMA & MIGRATIONS STRATEGY - TRADITIONAL APPROACH
 
-**Date:** December 3, 2025  
-**Status:** IMPLEMENTATION SPECIFICATION - DATABASE SCHEMA & MIGRATIONS  
-**Version:** 1.0  
+**Status:** ✅ UPDATED FOR TRADITIONAL APPROACH (CHG-001 - 12/5/2025)  
+**Version:** 2.0 - Traditional Separate Tables  
 **Classification:** Critical - Required Before Phase 1 Launch
 
 ---
 
-## 📋 Document Purpose
+## 🎯 CRITICAL UPDATE - TRADITIONAL APPROACH CONFIRMED
 
-This specification defines the complete database schema for DataQuest, including all tables, relationships, constraints, and the strategy for managing schema changes through migrations. It consolidates existing schema documentation and provides clear guidance for developers building the database layer.
+**This document reflects the approved Traditional Approach design decision.**
+
+### Key Changes:
+- ✅ **Separate tables per event type** (no polymorphic JSON)
+- ✅ **Educational clarity** added as CORE design principle
+- ✅ **Tier 1 tables** fully documented (BadgeAccess, ParkingLotAccess)
+- ✅ **Student-visible schema** contains ZERO JSON
+- ✅ **Educational design** prioritized over architectural elegance
+
+---
+
+## 📋 DOCUMENT PURPOSE
+
+This specification defines the complete database schema for DataQuest, including all tables, relationships, constraints, and the strategy for managing schema changes through migrations.
 
 **This document enables:**
 - ✅ Developers understand the complete data model
@@ -21,468 +33,414 @@ This specification defines the complete database schema for DataQuest, including
 
 ---
 
-## 🎯 Scope
+## 🎯 SCOPE
 
-### What This Document Covers
-
+### What This Document Covers:
 ```
 ✅ Complete database schema (all tables, columns, types)
 ✅ Primary/foreign key relationships
 ✅ Constraints and validation rules
-✅ Indexing strategy (columns to index, composite keys)
-✅ Database migration strategy (how to update schema)
-✅ Seed data strategy (initial data for environments)
+✅ Indexing strategy
+✅ Migration strategy and versioning
+✅ Seed data strategy
 ✅ Backup and recovery procedures
-✅ Query performance optimization guidelines
-✅ Connection pooling configuration
-✅ Database initialization procedures
+✅ Query optimization guidelines
+✅ Tier progression and educational design
+✅ Phase 1 deliverables and scope
 ```
 
-### What This Document Does NOT Cover
-
+### What This Document Does NOT Cover:
 ```
-❌ Specific T-SQL syntax (refer to SQL Server documentation)
-❌ Advanced replication/sharding strategies
-❌ Data warehouse or OLAP considerations
-❌ Cloud-specific database options (Phase 2+)
+❌ Specific T-SQL syntax
+❌ Advanced replication/sharding
+❌ Data warehouse/OLAP
+❌ Cloud-specific options
+❌ JSON storage (not in student schema)
 ```
 
 ---
 
-## 🏗️ Database Architecture Overview
+## 🗺️ DATABASE ARCHITECTURE
 
-### Design Principles
+### Design Principles - WITH EDUCATIONAL CLARITY
 
 ```
 1. Normalization (3NF)
-   └─ Reduces data redundancy
-   └─ Maintains data integrity
+   ├─ Reduces redundancy
+   ├─ Maintains integrity
    └─ Supports query flexibility
 
 2. Performance First
-   └─ Strategic denormalization where needed
-   └─ Proper indexing on foreign keys
+   ├─ Strategic denormalization where needed
+   ├─ Proper indexing on foreign keys
    └─ Composite indices for common queries
 
 3. Auditability
-   └─ CreatedAt, UpdatedAt timestamps
-   └─ CreatedBy, UpdatedBy tracking
-   └─ Soft deletes where appropriate
+   ├─ CreatedAt, UpdatedAt timestamps
+   ├─ CreatedBy, UpdatedBy tracking
+   └─ Hard deletes only (no soft deletes)
 
 4. Extensibility
-   └─ Room for additional fields
-   └─ JSON columns for semi-structured data
+   ├─ Room for additional fields
+   ├─ New tables per tier progression
    └─ Versioning for case content
+
+5. EDUCATIONAL CLARITY ⭐ NEW PRIMARY PRINCIPLE
+   ├─ Separate tables for distinct event types
+   ├─ NO polymorphic JSON structures
+   ├─ Schema communicates investigation domains
+   ├─ Each tier introduces new, discoverable tables
+   └─ Students learn SQL naturally
 ```
 
 ### Two-Part Schema Design
 
-**DataQuest uses a dual-schema approach:**
-
 ```
-PART 1: Student & Platform Management
-├─ Students - Student profiles and progress
-├─ Student_Sessions - Case session tracking
-├─ Student_Queries - Query submissions and results
-├─ Query_Feedback - AI tutor feedback
-├─ Case_Content - Case definitions (stored as JSON + metadata)
-└─ Audit_Log - Security and compliance logging
+PART 1: Student & Platform Management (Main DB - INTERNAL ONLY)
+├─ Students, Student_Sessions, Student_Queries
+├─ Query_Feedback, Audit_Log
+└─ Note: JSON may exist here ONLY for application use
 
-PART 2: Investigative Case Data (per case database)
-├─ Cases - Case definitions (metadata only in main DB)
-├─ Persons - People involved in the case
-├─ Locations - Places of interest
-├─ Evidence - Physical evidence records
-├─ WitnessStatements - Statements from witnesses
-├─ TransactionLogs - Financial/access logs
-├─ CommunicationRecords - Phone/email logs
-├─ Relationships - Links between persons
-└─ StorySteps - Sequential case progression steps
-```
-
----
-
-## 📊 Core Schema Design
-
-### Entity Relationship Diagram (Logical)
-
-```
-PART 1: STUDENT MANAGEMENT TIER
-┌──────────────────────────────────────────────────────────────────┐
-│      Platform-Level Tables (Main Database)   │
-└──────────────────────────────────────────────────────────────────┘
-
-STUDENTS (PK: StudentID)
-  ├─ StudentID (GUID)
-  ├─ Email (nvarchar(255), unique)
-  ├─ FirstName (nvarchar(100))
-  ├─ LastName (nvarchar(100))
-  ├─ CurrentTier (int, FK→Tiers)
-  ├─ TierStartedAt (datetime2)
-  ├─ CreatedAt (datetime2)
-  └─ UpdatedAt (datetime2)
-
-STUDENT_SESSIONS (PK: SessionID)
-  ├─ SessionID (GUID)
-  ├─ StudentID (GUID, FK→Students)
-  ├─ CaseID (GUID, FK→Cases)
-  ├─ State (nvarchar(50): ACTIVE, PAUSED, COMPLETED)
-  ├─ CurrentStepNumber (int)
-  ├─ CreatedAt (datetime2)
-  ├─ ExpiresAt (datetime2)
-  ├─ LastActivityAt (datetime2)
-  └─ CompletedAt (datetime2, nullable)
-
-STUDENT_QUERIES (PK: QueryID)
-  ├─ QueryID (GUID)
-  ├─ SessionID (GUID, FK→Student_Sessions)
-  ├─ StudentID (GUID, FK→Students)
-  ├─ CaseID (GUID, FK→Cases)
-  ├─ QueryText (nvarchar(max))
-  ├─ ExecutionTimeMs (int)
-  ├─ Status (nvarchar(50): VALID, INVALID, ERROR, TIMEOUT)
-  ├─ ErrorMessage (nvarchar(max), nullable)
-  ├─ ResultRowCount (int)
-  ├─ SubmittedAt (datetime2)
-  ├─ FeedbackID (GUID, FK→Query_Feedback, nullable)
-  └─ CreatedAt (datetime2)
-
-QUERY_FEEDBACK (PK: FeedbackID)
-  ├─ FeedbackID (GUID)
-  ├─ QueryID (GUID, FK→Student_Queries)
-  ├─ SessionID (GUID, FK→Student_Sessions)
-  ├─ FeedbackType (nvarchar(50): HINT, CORRECTION, ENCOURAGEMENT)
-  ├─ FeedbackText (nvarchar(max))
-  ├─ HintLevel (int, 1-6, nullable)
-  ├─ AgentGenerated (bit)
-  ├─ CreatedAt (datetime2)
-  └─ UpdatedAt (datetime2)
-
-CASE_CONTENT (PK: ContentID)
-  ├─ ContentID (GUID)
-  ├─ CaseID (GUID, FK→Cases)
-  ├─ CaseJSON (nvarchar(max))  ← Full case content
-  ├─ Version (int)
-  ├─ CreatedAt (datetime2)
-  ├─ CreatedBy (nvarchar(255))
-  └─ Active (bit)
-
-AUDIT_LOG (PK: AuditID)
-  ├─ AuditID (BIGINT)
-  ├─ EventType (nvarchar(100))
-  ├─ StudentID (GUID, FK→Students, nullable)
-  ├─ EntityType (nvarchar(100))
-  ├─ EntityID (GUID, nullable)
-  ├─ Details (nvarchar(max), JSON)
-  ├─ IPAddress (nvarchar(50))
-  ├─ Timestamp (datetime2)
-  └─ [Index on Timestamp]
-
-CASES (PK: CaseID)
-  ├─ CaseID (GUID)
-  ├─ CaseName (nvarchar(255))
-  ├─ Tier (int, FK→Tiers)
-  ├─ Description (nvarchar(max))
-  ├─ DatabaseName (nvarchar(128))
-  ├─ Version (int)
-  ├─ Status (nvarchar(50): DRAFT, ACTIVE, ARCHIVED)
-  ├─ CreatedAt (datetime2)
-  ├─ UpdatedAt (datetime2)
-  └─ CreatedBy (nvarchar(255))
-
-TIERS (PK: TierID)
-  ├─ TierID (int)
-  ├─ TierName (nvarchar(100))
-  ├─ TierLevel (int, 1-5)
-  ├─ Description (nvarchar(max))
-  ├─ SocraticLevel (int, 1-6)
-  ├─ MinHintCount (int)
-  ├─ MaxHintCount (int)
-  └─ CreatedAt (datetime2)
-
-┌──────────────────────────────────────────────────────────────────┐
-│  PART 2: INVESTIGATIVE CASE DATA (Per Case Database)    │
-│    Defined in Core Domain Models & Data Dictionary     │
-└──────────────────────────────────────────────────────────────────┘
-
-CASES (Metadata - case definitions)
-  ├─ CaseID (int, PK)
-  ├─ CaseTitle (varchar(100))
-  ├─ InitialPrompt (varchar(max))
-  └─ Conclusion (varchar(max), nullable)
-
-PERSONS (PK: PersonID)
-  ├─ PersonID (int)
-  ├─ CaseID (int, FK→Cases)
-  ├─ FirstName (varchar(50))
-  ├─ LastName (varchar(50))
-  ├─ Role (varchar(50))
-  └─ IsSuspect (bit)
-
-LOCATIONS (PK: LocationID)
-  ├─ LocationID (int)
-  ├─ CaseID (int, FK→Cases)
-  ├─ Name (varchar(100))
-  └─ Address (varchar(255))
-
-EVIDENCE (PK: EvidenceID)
-  ├─ EvidenceID (int)
-  ├─ CaseID (int, FK→Cases)
-  ├─ LocationID (int, FK→Locations)
-  ├─ Type (varchar(50))
-  └─ TimestampFound (datetime2)
-
-WITNESSTATEMENTS (PK: StatementID)
-  ├─ StatementID (int)
-  ├─ CaseID (int, FK→Cases)
-  ├─ PersonID (int, FK→Persons)
-  └─ StatementText (varchar(max))
-
-TRANSACTIONLOGS (PK: LogID)
-  ├─ LogID (int)
-  ├─ CaseID (int, FK→Cases)
-  ├─ PersonID (int, FK→Persons, nullable)
-  ├─ Timestamp (datetime2)
-└─ Amount (decimal(10,2), nullable)
-
-COMMUNICATIONRECORDS (PK: RecordID)
-  ├─ RecordID (int)
-  ├─ CaseID (int, FK→Cases)
-  ├─ CallerID (int, FK→Persons)
-  ├─ ReceiverID (int, FK→Persons)
-  └─ Timestamp (datetime2)
-
-RELATIONSHIPS (PK: RelationshipID)
-  ├─ RelationshipID (int)
-  ├─ PersonID_A (int, FK→Persons)
-  ├─ PersonID_B (int, FK→Persons)
-  └─ Type (varchar(50))
-
-STORYSTEPS (PK: StepID)
-  ├─ StepID (int)
-  ├─ CaseID (int, FK→Cases)
-  ├─ StepPrompt (varchar(max))
-  └─ CanonicalQuery (varchar(max))
-
-ANSWERKEYS (PK: AnswerKeyID)
-  ├─ AnswerKeyID (int)
-  ├─ StepID (int, FK→StorySteps)
-  ├─ ExpectedResultHash (varchar(64))
-  └─ ExpectedClueValue (varchar(max))
+PART 2: Investigative Case Data (STUDENT-FACING - PURE RELATIONAL)
+├─ Tier 1 Tables:
+│  ├─ BadgeAccess (Case 1.1 - Badge access logs)
+│  └─ ParkingLotAccess (Case 1.2 - Parking lot events)
+├─ Tier 2 Tables:
+│  ├─ Incidents (Crime reports)
+│  └─ CommunicationRecords (Phone/email logs)
+├─ Tier 3+ Tables:
+│  ├─ WitnessStatements
+│  ├─ TransactionLogs
+│  └─ [Additional per tier]
+└─ Supporting Tables (All Tiers):
+   ├─ Cases, Persons, Locations, Evidence
+   ├─ StorySteps, AnswerKeys
+   └─ [All with EXPLICIT columns - NO JSON]
 ```
 
 ---
 
-## 📋 Detailed Table Specifications
+## 📊 COMPLETE TABLE ARCHITECTURE
 
-### PART 1: STUDENT MANAGEMENT TABLES
+### TIER 1: Foundation (Access Logs)
 
-[Table specifications continue as before: Students, Student_Sessions, Student_Queries, Query_Feedback, Case_Content, Audit_Log, Cases, Tiers]
-
-### PART 2: INVESTIGATIVE CASE TABLES (From Core Domain Models)
-
-**Reference:** See `docs/design-and-planning/Core Domain Models.md` and `docs/design-and-planning/Data Dictionary - DataQuest.md`
-
-These tables are defined per-case in separate case databases. Key tables include:
-
-#### Table: Persons
-
-```sql
-CREATE TABLE Persons (
-    PersonID INT PRIMARY KEY,
-    CaseID INT NOT NULL,
-    FirstName VARCHAR(50) NOT NULL,
-    LastName VARCHAR(50) NOT NULL,
-    Role VARCHAR(50) NOT NULL CHECK (Role IN ('Suspect', 'Witness', 'Victim')),
-    IsSuspect BIT NOT NULL DEFAULT 0,
-    
-CONSTRAINT FK_Persons_Case FOREIGN KEY (CaseID)
-        REFERENCES Cases(CaseID),
-CONSTRAINT CK_PersonRole CHECK (Role IN ('Suspect', 'Witness', 'Victim'))
-)
+**BadgeAccess** - Badge swipe records for building access (Case 1.1)
+```
+Columns: AccessID (PK), CaseID (FK), PersonID (FK), LocationID (FK),
+     AccessTime (DATETIME2), AccessType, Status, BadgeID
+Indexes: (CaseID, AccessTime), (PersonID, LocationID)
 ```
 
-#### Table: Locations
-
-```sql
-CREATE TABLE Locations (
-    LocationID INT PRIMARY KEY,
-    CaseID INT NOT NULL,
-    Name VARCHAR(100) NOT NULL,
-    Address VARCHAR(255) NOT NULL,
-    
-    CONSTRAINT FK_Locations_Case FOREIGN KEY (CaseID)
-        REFERENCES Cases(CaseID)
-)
+**ParkingLotAccess** - Parking lot gate events (Case 1.2)
+```
+Columns: GateEventID (PK), CaseID (FK), LocationID (FK),
+         EventTime (DATETIME2), EventType, VehicleID, VehicleRecorded
+Indexes: (LocationID, EventTime), (CaseID, EventTime)
 ```
 
-#### Table: Evidence
+### TIER 2: Relationship Exploration
 
-```sql
-CREATE TABLE Evidence (
-    EvidenceID INT PRIMARY KEY,
-  CaseID INT NOT NULL,
-    LocationID INT NOT NULL,
-  Type VARCHAR(50) NOT NULL,
-    TimestampFound DATETIME2 NOT NULL,
-    
-    CONSTRAINT FK_Evidence_Case FOREIGN KEY (CaseID)
-        REFERENCES Cases(CaseID),
-    CONSTRAINT FK_Evidence_Location FOREIGN KEY (LocationID)
-        REFERENCES Locations(LocationID)
-)
+**Incidents** - Crime incident reports
+```
+Columns: IncidentID (PK), CaseID (FK), IncidentType, IncidentDate,
+         LocationID (FK), Description, Severity, ReportedBy (FK)
+Indexes: (CaseID, IncidentDate), (IncidentType, LocationID)
 ```
 
-#### Table: TransactionLogs
-
-```sql
-CREATE TABLE TransactionLogs (
-    LogID INT PRIMARY KEY IDENTITY(1,1),
-    CaseID INT NOT NULL,
-    PersonID INT NULL,
-    Timestamp DATETIME2 NOT NULL,
-    Amount DECIMAL(10,2) NULL,
-    
-    CONSTRAINT FK_TransactionLogs_Case FOREIGN KEY (CaseID)
-        REFERENCES Cases(CaseID),
-    CONSTRAINT FK_TransactionLogs_Person FOREIGN KEY (PersonID)
-        REFERENCES Persons(PersonID),
-    CONSTRAINT CK_Amount CHECK (Amount IS NULL OR Amount > 0)
-)
+**CommunicationRecords** - Phone/email/SMS communications
+```
+Columns: RecordID (PK), CaseID (FK), CallerID (FK), ReceiverID (FK),
+   CommunicationType, Timestamp (DATETIME2), Duration, Details
+Indexes: (Timestamp, CallerID), (CallerID, ReceiverID)
 ```
 
-#### Table: WitnessStatements
+### TIER 3: Data Quality
 
-```sql
-CREATE TABLE WitnessStatements (
-    StatementID INT PRIMARY KEY,
-    CaseID INT NOT NULL,
-    PersonID INT NOT NULL,
-    StatementText VARCHAR(MAX) NOT NULL,
-    
-    CONSTRAINT FK_WitnessStatements_Case FOREIGN KEY (CaseID)
-        REFERENCES Cases(CaseID),
-    CONSTRAINT FK_WitnessStatements_Person FOREIGN KEY (PersonID)
-        REFERENCES Persons(PersonID)
-)
+**WitnessStatements** - Witness testimonies
+```
+Columns: StatementID (PK), CaseID (FK), WitnessID (FK), LocationID (FK),
+       StatementDate (DATETIME2), StatementText, Reliability
+Indexes: (CaseID, StatementDate)
 ```
 
-#### Table: CommunicationRecords
+### TIER 4+: Complex Analysis
 
-```sql
-CREATE TABLE CommunicationRecords (
-    RecordID INT PRIMARY KEY,
-    CaseID INT NOT NULL,
-    CallerID INT NOT NULL,
-    ReceiverID INT NOT NULL,
-    Timestamp DATETIME2 NOT NULL,
-    
-    CONSTRAINT FK_CommunicationRecords_Case FOREIGN KEY (CaseID)
-   REFERENCES Cases(CaseID),
-    CONSTRAINT FK_CommunicationRecords_Caller FOREIGN KEY (CallerID)
-        REFERENCES Persons(PersonID),
-    CONSTRAINT FK_CommunicationRecords_Receiver FOREIGN KEY (ReceiverID)
-        REFERENCES Persons(PersonID)
-)
+**TransactionLogs** - Financial/system access logs
+```
+Columns: LogID (PK), CaseID (FK), PersonID (FK), LocationID (FK),
+         TransactionType, Status, Amount, Timestamp (DATETIME2), Details
+Indexes: (CaseID, Timestamp), (PersonID, TransactionType)
 ```
 
-#### Table: Relationships
+### SUPPORTING TABLES (All Tiers)
 
-```sql
-CREATE TABLE Relationships (
-    RelationshipID INT PRIMARY KEY,
-    PersonID_A INT NOT NULL,
-    PersonID_B INT NOT NULL,
-    Type VARCHAR(50) NOT NULL,
-    
-    CONSTRAINT FK_Relationships_PersonA FOREIGN KEY (PersonID_A)
-        REFERENCES Persons(PersonID),
-    CONSTRAINT FK_Relationships_PersonB FOREIGN KEY (PersonID_B)
-     REFERENCES Persons(PersonID),
-    CONSTRAINT CK_Different_Persons CHECK (PersonID_A <> PersonID_B)
-)
+**Cases** - Case definitions and metadata
+```
+Columns: CaseID (PK), CaseTitle, CaseDescription, DifficultyTier,
+         CreatedAt (DATETIME2), IsActive (BIT)
 ```
 
-#### Table: StorySteps
-
-```sql
-CREATE TABLE StorySteps (
-    StepID INT PRIMARY KEY,
-    CaseID INT NOT NULL,
-    StepPrompt VARCHAR(MAX) NOT NULL,
-    CanonicalQuery VARCHAR(MAX) NOT NULL,
-    
-    CONSTRAINT FK_StorySteps_Case FOREIGN KEY (CaseID)
-      REFERENCES Cases(CaseID)
-)
+**Persons** - Individuals (suspects, witnesses, victims)
+```
+Columns: PersonID (PK), FirstName, LastName, Role, IsSuspect (BIT),
+         Affiliation, CreatedAt (DATETIME2)
+Unique: (FirstName, LastName, Role)
 ```
 
-#### Table: AnswerKeys
+**Locations** - Physical places of interest
+```
+Columns: LocationID (PK), Name, Address, Zone, BuildingType,
+         Latitude, Longitude, CreatedAt (DATETIME2)
+Unique: Name
+```
 
-```sql
-CREATE TABLE AnswerKeys (
-AnswerKeyID INT PRIMARY KEY,
-    StepID INT NOT NULL,
-    ExpectedResultHash VARCHAR(64) NOT NULL,
-  ExpectedClueValue VARCHAR(MAX) NOT NULL,
-    
-    CONSTRAINT FK_AnswerKeys_Step FOREIGN KEY (StepID)
-        REFERENCES StorySteps(StepID),
-    CONSTRAINT UQ_AnswerKeys_Step UNIQUE (StepID)
-)
+**Evidence** - Physical evidence records
+```
+Columns: EvidenceID (PK), CaseID (FK), LocationID (FK), Description,
+         EvidenceType, Value (DECIMAL), TimestampFound (DATETIME2)
+Indexes: (CaseID, TimestampFound)
+```
+
+**StorySteps** - Investigation steps (tutoring)
+```
+Columns: StepID (PK), CaseID (FK), StepNumber, StepPrompt,
+         CanonicalQuery, ExpectedValue, CreatedAt (DATETIME2)
+Indexes: (CaseID, StepNumber)
+```
+
+**AnswerKeys** - Canonical query results (tutoring)
+```
+Columns: AnswerKeyID (PK), StepID (FK), ExpectedResultHash,
+         ExpectedClueValue, CreatedAt (DATETIME2)
 ```
 
 ---
 
-## 📋 CONSOLIDATED TABLE REFERENCE
+## 🔗 RELATIONSHIPS & CARDINALITY
 
-| Category | Table Name | Purpose | Location |
-|----------|-----------|---------|----------|
-| **Student Management** | Students | Student profiles | Main DB |
-| | Student_Sessions | Case session tracking | Main DB |
-| | Student_Queries | Query submissions | Main DB |
-| | Query_Feedback | Tutor feedback | Main DB |
-| | Tiers | Tier definitions | Main DB |
-| | Cases | Case metadata | Main DB |
-| | Case_Content | Case JSON content | Main DB |
-| | Audit_Log | Security logging | Main DB |
-| **Investigative Data** | Persons | Case people | Case DB |
-| | Locations | Case locations | Case DB |
-| | Evidence | Physical evidence | Case DB |
-| | WitnessStatements | Witness accounts | Case DB |
-| | TransactionLogs | Financial/access logs | Case DB |
-| | CommunicationRecords | Communication logs | Case DB |
-| | Relationships | Person relationships | Case DB |
-| | StorySteps | Case progression | Case DB |
-| | AnswerKeys | Canonical answers | Case DB |
+```
+Cases (1:Many) → StorySteps (1:One) → AnswerKeys
+Cases (1:Many) → Persons
+Cases (1:Many) → Locations
+Cases (1:Many) → Evidence (Many:One) → Locations
+
+TIER 1:
+Cases (1:Many) → BadgeAccess
+  ├─ BadgeAccess (Many:One) → Persons
+  └─ BadgeAccess (Many:One) → Locations
+
+Cases (1:Many) → ParkingLotAccess
+  └─ ParkingLotAccess (Many:One) → Locations
+
+TIER 2:
+Cases (1:Many) → Incidents
+  ├─ Incidents (Many:One) → Locations
+  └─ Incidents (Many:One) → Persons (Reporter)
+
+Cases (1:Many) → CommunicationRecords
+  ├─ CommunicationRecords (Many:One) → Persons (Caller)
+  └─ CommunicationRecords (Many:One) → Persons (Receiver)
+
+TIER 3:
+Cases (1:Many) → WitnessStatements
+  ├─ WitnessStatements (Many:One) → Persons (Witness)
+  └─ WitnessStatements (Many:One) → Locations
+
+TIER 4+:
+Cases (1:Many) → TransactionLogs
+  ├─ TransactionLogs (Many:One) → Persons
+  └─ TransactionLogs (Many:One) → Locations
+```
 
 ---
 
-## 🔄 Database Initialization Strategy
+## 📋 INDEXING STRATEGY
 
-### Initialization Order
+### Primary Indexes (Automatic)
+- All primary keys automatically indexed
 
-**Step 1: Create Student Management Database (Main)**
-```sql
--- Create all tables in Part 1
--- Insert Tier seed data
--- Ready for students to enroll
+### Composite Indexes (Performance)
+```
+Tier 1:
+  BadgeAccess: (CaseID, AccessTime), (PersonID, LocationID)
+  ParkingLotAccess: (LocationID, EventTime), (CaseID, EventTime)
+
+Tier 2:
+  Incidents: (CaseID, IncidentDate), (IncidentType, LocationID)
+  CommunicationRecords: (Timestamp, CallerID), (CallerID, ReceiverID)
+
+Tier 3:
+  WitnessStatements: (CaseID, StatementDate)
+
+Tier 4+:
+  TransactionLogs: (CaseID, Timestamp), (PersonID, TransactionType)
+
+All Tiers:
+  Persons: (Role, IsSuspect)
+  Evidence: (CaseID, LocationID)
 ```
 
-**Step 2: Create Case Databases (Per Case)**
-```sql
--- For each active case, create a separate database
--- Insert case-specific tables (Persons, Locations, Evidence, etc.)
--- Populate with case data from Case_Content JSON
--- Register in main Cases table
+---
+
+## 🔄 MIGRATION STRATEGY
+
+### Version Control
+
+```
+Format: V[#]_[Description].sql
+Examples:
+  V001_InitialSchema.sql (Phase 1 - All core + Tier 1)
+V002_AddTier2Tables.sql (Phase 1.1 - Incidents, Communications)
+  V003_AddWitnessStatements.sql (Phase 1.2 - Tier 3)
+  V004_AddTransactionLogs.sql (Phase 1.3 - Tier 4+)
 ```
 
-**Step 3: Seed Reference Data**
-```sql
--- Tiers (main DB)
--- Cases metadata (main DB)
--- Case content via Case_Content table
+### Execution Steps
+
+```
+1. Backup current database
+2. Run migration scripts in order
+3. Verify schema integrity
+4. Update seed data if needed
+5. Run regression tests
+6. Document changes
 ```
 
-[Rest of document continues as before...]
+---
+
+## 💾 SEED DATA STRATEGY
+
+### Phase 1 - Tier 1 Cases
+
+**Case 1.1: "Missing Badge Access Record"**
+```
+├─ 5 Persons (employees, suspects)
+├─ 3 Locations (offices, server rooms)
+├─ 50+ BadgeAccess records
+├─ 2 anomalies (missing/suspicious entries)
+└─ Expected: Find the gap in access logs
+```
+
+**Case 1.2: "Downtown Parking Lot Theft"**
+```
+├─ 3 Locations (parking area, surrounding)
+├─ 30+ ParkingLotAccess records
+├─ 2 suspicious events (unauthorized access)
+└─ Expected: Identify suspicious vehicle activity
+```
+
+### Seed Data Characteristics
+```
+✅ Realistic but minimal
+✅ Sufficient for investigation
+✅ Includes edge cases (NULLs, missing records)
+✅ Allows pattern detection
+✅ Pre-validated against canonical queries
+```
+
+---
+
+## 🔐 NO JSON IN STUDENT SCHEMA - ABSOLUTE REQUIREMENT
+
+### Critical Rule:
+```
+❌ NO JSON columns in ANY student-visible table
+❌ NO JSON_VALUE() in expected student queries
+❌ NO polymorphic event designs
+❌ NO EventType classifiers
+❌ NO hidden data structures
+```
+
+### Verification:
+```
+✅ Every column: explicit, descriptive name
+✅ Every table: name communicates purpose
+✅ Every relationship: explicit via FK
+✅ Data: normalized (3NF)
+✅ Queries: straightforward SQL, no parsing
+```
+
+---
+
+## ✅ PHASE 1 DELIVERABLES
+
+### Includes:
+```
+✅ Core tables (Cases, Persons, Locations, Evidence)
+✅ Tier 1 tables (BadgeAccess, ParkingLotAccess)
+✅ Tier 2 tables (Incidents, CommunicationRecords)
+✅ Tutoring tables (StorySteps, AnswerKeys)
+✅ All indexes and constraints
+✅ Migration scripts (V001_InitialSchema.sql)
+✅ Seed data for Tier 1 only
+✅ ZERO JSON in student schema
+```
+
+### Does NOT Include:
+```
+❌ Tier 3+ tables (Phase 1.1+)
+❌ Advanced indexing
+❌ Partitioning/sharding
+❌ Replication
+❌ Encryption
+❌ Soft deletes
+```
+
+---
+
+## 📊 CONFIGURATION
+
+### Connection Pooling
+```
+Min: 5, Max: 100
+Timeout: 15 seconds
+Lifetime: 300 seconds (recycle every 5 min)
+```
+
+### Transaction Isolation
+```
+Level: READ_COMMITTED (SQL Server default)
+Rationale: Prevents dirty reads, maintains performance
+```
+
+### Backup Strategy
+```
+Frequency: Daily
+Type: Full + transaction log backups
+Retention: 30 days (dev), 90 days (prod)
+Recovery: SIMPLE (dev), FULL (prod)
+```
+
+---
+
+## 📝 IMPLEMENTATION NOTES
+
+### For Database Architects:
+- All tables follow 3NF normalization
+- Strategic composite indexes
+- No unnecessary denormalization
+- Clear semantic naming
+- Educational design prioritized
+
+### For SQL Developers:
+- Create in dependency order
+- Enforce all FK constraints
+- Create indexes after data load
+- Run seed scripts after schema
+- Verify with canonical queries
+
+### For Students:
+- Schema is discoverable
+- Table names communicate purpose
+- NO JSON or hidden complexity
+- Relationships are explicit
+- Queries are straightforward SQL
+
+---
+
+**Database Schema & Migrations Strategy:** Updated CHG-001 (12/5/2025)  
+**Status:** ✅ READY FOR IMPLEMENTATION  
+**Approach:** Traditional Separate Tables - Educational Clarity First  
+**JSON in Student Schema:** ✅ ZERO  
+**Tier 1 Complete:** ✅ BadgeAccess & ParkingLotAccess
 
