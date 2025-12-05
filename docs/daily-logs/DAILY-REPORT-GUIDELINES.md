@@ -18,6 +18,62 @@ Daily reports serve to:
 
 ---
 
+## 📋 RESPONSIBILITY & OWNERSHIP
+
+### Who Should Create Daily Reports?
+
+**For Solo Development (Current Model):**
+- Developer creates own daily report at end of work session
+- Report captures all work completed during that session
+- Frequency: Daily (at end of focused work period)
+- Ownership: Individual contributor
+
+**For Team Development:**
+- Each team member creates their own daily report
+- Collective reports provide team visibility
+- Frequency: Daily (typically end of workday)
+- Ownership: Individual contributors
+
+**Accountability:**
+- Reports are self-authored by the person who did the work
+- Provides transparent record of effort and progress
+- Enables knowledge sharing across team
+- Supports project continuity if team member unavailable
+
+### Report Review & Sign-Off
+
+**Solo Projects (Optional):**
+- Self-review for accuracy before committing
+- Optional: Peer review if available
+- Focus: Ensure metrics are accurate, accomplishments clear
+
+**Team Projects (Recommended):**
+- Optional team lead spot-check (weekly or as-needed)
+- Review for: Blockers, quality concerns, unrealistic estimates
+- Escalation: If critical blockers identified, escalate immediately
+
+**When to Escalate:**
+- ⚠️ Critical blockers identified
+- ⚠️ Major schedule risks discovered
+- ⚠️ Quality concerns noted
+- ⚠️ Resource needs or dependencies discovered
+
+### Distribution & Archival
+
+**Where Reports Live:**
+- Archive in: `docs/daily-logs/`
+- File format: `YYYYMMDD-[Type]-[Descriptor].md`
+- Branch: Commit to master/main
+- Backup: Automatically backed up via git
+
+**Who Sees Reports:**
+- Committed to repository (all team members can access)
+- Optional email share with project manager/stakeholders
+- Can be referenced in sprint reviews/retrospectives
+- Create transparency across project
+
+---
+
 ## 📊 DAILY REPORT STRUCTURE
 
 ### Standard Daily Report Format
@@ -62,7 +118,7 @@ Daily reports serve to:
 ```
 Documentation: [X hours] ([Y%])
 Development:     [X hours] ([Y%])
-Review/Audit:      [X hours] ([Y%])
+Review/Audit:    [X hours] ([Y%])
 Verification:      [X hours] ([Y%])
 Git/Management:    [X hours] ([Y%])
 ```
@@ -70,7 +126,7 @@ Git/Management:    [X hours] ([Y%])
 ### By Component
 
 ```
-Tier System:       [X hours] ([Y%])
+Tier System:    [X hours] ([Y%])
 Case Design:       [X hours] ([Y%])
 Database Schema:   [X hours] ([Y%])
 [Other]:   [X hours] ([Y%])
@@ -207,23 +263,54 @@ Total: [X] commits, [Y] lines changed
 - **Time Invested:** [X hours]
 - **Status:** ✅ Complete / ⚠️ Needs Follow-up
 - **Verified By:** [Optional - Reviewer name]
+```
 
 ---
 
-## 📋 QUICK CHECKLIST
+### ⚡ QUICK DAILY REPORT TEMPLATE (Minimal Version)
 
-Use this to ensure your daily report is complete:
+Use this template for simple days where most standard sections don't apply:
 
-- [ ] Executive summary written (2-3 sentences)
-- [ ] All completed items listed
-- [ ] Documents created/updated documented
-- [ ] Git commits referenced with hashes
-- [ ] Hours and metrics tracked
-- [ ] Blockers identified and status noted
-- [ ] Tomorrow's priorities listed with rationale
-- [ ] Key decisions/changes noted
-- [ ] Quality self-assessment included
-- [ ] Sign-off section completed
+```markdown
+# 📋 Daily Work Summary - [Date]
+
+## Summary
+[1-2 sentences about what was done]
+
+## Completed
+- [Task 1]
+- [Task 2]
+- [Task 3]
+
+## Metrics
+- Time: [X hours]
+- Commits: [X]
+- Files: Created [X], Updated [X]
+
+## Tomorrow's Priorities
+1. [Priority 1]
+2. [Priority 2]
+
+## Blockers
+[None / Brief description]
+
+## Sign-Off
+- Completed by: [Name]
+- Date: [Date]
+- Time: [X hours]
+```
+
+**When to Use Quick Template:**
+- Routine work days (maintenance, small updates)
+- Days with fewer than 5 deliverables
+- When progress is straightforward (no complex decisions)
+- To maintain momentum on high-velocity days
+
+**When to Use Full Template:**
+- Complex work days with multiple decisions
+- Days with significant deliverables or changes
+- Milestone completion dates
+- Days with major blockers or issues
 
 ---
 
