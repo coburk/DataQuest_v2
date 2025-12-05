@@ -12,6 +12,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using DataQuest.Services.Mcp;
 
 namespace DataQuest.Services.Database
 {
@@ -29,188 +30,212 @@ namespace DataQuest.Services.Database
         private readonly IEnvironmentValidator _environmentValidator;
         private readonly IRateLimiter _rateLimiter;
         private readonly IAuditLogger _auditLogger;
-    private readonly ILogger<DatabaseManager> _logger;
+  private readonly ISqlMcpClient _sqlMcpClient;
+        private readonly ILogger<DatabaseManager> _logger;
 
-        // TODO: Inject ISqlMcpClient when MCP infrastructure is available
-        // private readonly ISqlMcpClient _sqlMcpClient;
-
-     private readonly string _schemaScriptPath = "sql/migrations/V001_InitialSchema.sql";
+  private readonly string _schemaScriptPath = "sql/migrations/V001_InitialSchema.sql";
         private readonly string _seedDataScriptPath = "sql/migrations/V001_SeedData_Tier1.sql";
 
         private const string ConfirmationTokenPrefix = "confirm_";
-        private readonly Dictionary<string, DateTime> _confirmationTokens = new();
+ private readonly Dictionary<string, DateTime> _confirmationTokens = new();
         private const int ConfirmationTokenExpiryMinutes = 5;
 
-    public DatabaseManager(
-            IEnvironmentValidator environmentValidator,
-      IRateLimiter rateLimiter,
-   IAuditLogger auditLogger,
-          ILogger<DatabaseManager> logger)
-        {
-            _environmentValidator = environmentValidator ?? throw new ArgumentNullException(nameof(environmentValidator));
+        public DatabaseManager(
+   IEnvironmentValidator environmentValidator,
+    IRateLimiter rateLimiter,
+        IAuditLogger auditLogger,
+   ISqlMcpClient sqlMcpClient,
+      ILogger<DatabaseManager> logger)
+     {
+       _environmentValidator = environmentValidator ?? throw new ArgumentNullException(nameof(environmentValidator));
             _rateLimiter = rateLimiter ?? throw new ArgumentNullException(nameof(rateLimiter));
-  _auditLogger = auditLogger ?? throw new ArgumentNullException(nameof(auditLogger));
+      _auditLogger = auditLogger ?? throw new ArgumentNullException(nameof(auditLogger));
+            _sqlMcpClient = sqlMcpClient ?? throw new ArgumentNullException(nameof(sqlMcpClient));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
+     }
 
 /// <summary>
  /// Creates the DataQuest database with initial schema
         /// </summary>
         public async Task<DatabaseOperationResult> CreateDatabaseAsync()
         {
-  var startTime = DateTime.UtcNow;
+            var startTime = DateTime.UtcNow;
 
-        try
-            {
-     // Validate environment
-       _environmentValidator.ValidateDevelopmentEnvironment();
+   try
+     {
+          // Validate environment
+     _environmentValidator.ValidateDevelopmentEnvironment();
 
-                _logger.LogInformation("Beginning database creation");
+     _logger.LogInformation("Beginning database creation");
 
-       // TODO: Use SQL MCP when available
-        // var result = await _sqlMcpClient.ExecuteScriptAsync(
-        //    scriptPath: _schemaScriptPath,
-             //    options: new ScriptExecutionOptions { Timeout = TimeSpan.FromSeconds(30) });
+                // Execute schema creation script via SQL MCP
+      var result = await _sqlMcpClient.ExecuteScriptAsync(
+     _schemaScriptPath,
+  new SqlMcpExecutionOptions { TimeoutSeconds = 60 });
 
-      // PLACEHOLDER: Simulate MCP execution
-          await SimulateScriptExecutionAsync(_schemaScriptPath, 4000);
+     if (!result.Success)
+             {
+               throw new InvalidOperationException($"Database creation failed: {result.ErrorMessage}");
+  }
 
-                var duration = DateTime.UtcNow - startTime;
-                var result = new DatabaseOperationResult
-         {
-      Success = true,
-        Message = "Database created successfully",
-   Duration = duration,
-        RecordCounts = new Dictionary<string, int>
-            {
-   { "Tables", 14 },
-        { "Indexes", 25 },
-     { "Constraints", 20 }
-        }
-        };
-
-  _logger.LogInformation("Database creation completed in {Duration:hh\\:mm\\:ss}", duration);
-
-     await _auditLogger.LogDatabaseOperationAsync(
-     operationType: "Create",
-          success: true,
-   duration: duration,
-    details: new Dictionary<string, object> { { "TablesCreated", 14 }, { "Indexes", 25 } });
-
-       return result;
-       }
-   catch (InvalidOperationException ex)
-            {
-         var duration = DateTime.UtcNow - startTime;
-   await _auditLogger.LogDatabaseOperationAsync(
-  operationType: "Create",
-         success: false,
-          duration: duration,
-    details: new Dictionary<string, object> { { "error", ex.Message } });
-         throw;
-            }
-   catch (Exception ex)
+        var duration = DateTime.UtcNow - startTime;
+       var operationResult = new DatabaseOperationResult
+   {
+         Success = true,
+  Message = "Database created successfully",
+       Duration = duration,
+ RecordCounts = new Dictionary<string, int>
     {
-  var duration = DateTime.UtcNow - startTime;
-_logger.LogError(ex, "Database creation failed");
-      await _auditLogger.LogDatabaseOperationAsync(
-      operationType: "Create",
-      success: false,
-      duration: duration,
-       details: new Dictionary<string, object> { { "error", ex.Message } });
+             { "Tables", 14 },
+        { "Indexes", 25 },
+        { "Constraints", 20 }
+          }
+           };
 
-            return new DatabaseOperationResult
-      {
-   Success = false,
-         Message = "Database creation failed",
-        Duration = duration,
-        Error = ex.Message
- };
+                _logger.LogInformation("Database creation completed in {Duration:hh\\:mm\\:ss}", duration);
+
+       await _auditLogger.LogDatabaseOperationAsync(
+                operationType: "Create",
+    success: true,
+     duration: duration,
+        details: new Dictionary<string, object> { { "TablesCreated", 14 }, { "Indexes", 25 } });
+
+    return operationResult;
             }
+     catch (InvalidOperationException ex)
+     {
+ var duration = DateTime.UtcNow - startTime;
+             await _auditLogger.LogDatabaseOperationAsync(
+   operationType: "Create",
+                  success: false,
+            duration: duration,
+        details: new Dictionary<string, object> { { "error", ex.Message } });
+    throw;
+       }
+      catch (Exception ex)
+            {
+    var duration = DateTime.UtcNow - startTime;
+              _logger.LogError(ex, "Database creation failed");
+             await _auditLogger.LogDatabaseOperationAsync(
+          operationType: "Create",
+     success: false,
+                    duration: duration,
+        details: new Dictionary<string, object> { { "error", ex.Message } });
+
+                return new DatabaseOperationResult
+    {
+     Success = false,
+ Message = "Database creation failed",
+            Duration = duration,
+ Error = ex.Message
+     };
         }
+      }
 
         /// <summary>
     /// Deletes the DataQuest database (Development environment only)
         /// </summary>
         public async Task<DatabaseOperationResult> DeleteDatabaseAsync(string confirmationToken)
         {
-            var startTime = DateTime.UtcNow;
+  var startTime = DateTime.UtcNow;
 
-   try
-            {
+    try
+         {
                 // Validate environment
-       _environmentValidator.ValidateDevelopmentEnvironment();
+   _environmentValidator.ValidateDevelopmentEnvironment();
 
-     // Validate confirmation token
-if (!ValidateConfirmationToken(confirmationToken))
-  {
-          throw new ArgumentException("Invalid or expired confirmation token");
-                }
+   // Validate confirmation token
+       if (!ValidateConfirmationToken(confirmationToken))
+ {
+         throw new ArgumentException("Invalid or expired confirmation token");
+              }
 
-      // Check rate limit
-        if (!_rateLimiter.IsOperationAllowed("DatabaseDelete"))
-                {
-   var timeRemaining = _rateLimiter.GetTimeUntilAllowed("DatabaseDelete");
+  // Check rate limit
+      if (!_rateLimiter.IsOperationAllowed("DatabaseDelete"))
+    {
+    var timeRemaining = _rateLimiter.GetTimeUntilAllowed("DatabaseDelete");
        var message = $"Database deletion is rate limited. Please wait {timeRemaining:hh\\:mm\\:ss}";
          _logger.LogWarning(message);
-            throw new InvalidOperationException(message);
-          }
+          throw new InvalidOperationException(message);
+ }
 
-      _logger.LogWarning("Beginning database deletion");
+    _logger.LogWarning("Beginning database deletion");
 
- // TODO: Use SQL MCP when available
-                // var result = await _sqlMcpClient.DropAllTablesAsync(...);
+      // Execute DROP statements via SQL MCP
+         var dropScript = @"
+-- Drop all tables in dependency order
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'AnswerKeys') DROP TABLE AnswerKeys;
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'StorySteps') DROP TABLE StorySteps;
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'TransactionLogs') DROP TABLE TransactionLogs;
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'WitnessStatements') DROP TABLE WitnessStatements;
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'CommunicationRecords') DROP TABLE CommunicationRecords;
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Incidents') DROP TABLE Incidents;
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'ParkingLotAccess') DROP TABLE ParkingLotAccess;
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'BadgeAccess') DROP TABLE BadgeAccess;
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Evidence') DROP TABLE Evidence;
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Relationships') DROP TABLE Relationships;
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Persons') DROP TABLE Persons;
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Locations') DROP TABLE Locations;
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Cases') DROP TABLE Cases;
+";
 
-           await SimulateScriptExecutionAsync("DROP_TABLES", 1500);
+    var result = await _sqlMcpClient.ExecuteQueryAsync(
+          dropScript,
+     new SqlMcpExecutionOptions { TimeoutSeconds = 30 });
 
-         // Record operation in rate limiter
-   await _rateLimiter.RecordOperationAsync("DatabaseDelete");
+      if (!result.Success)
+             {
+         throw new InvalidOperationException($"Database deletion failed: {result.ErrorMessage}");
+        }
+
+        // Record operation in rate limiter
+      await _rateLimiter.RecordOperationAsync("DatabaseDelete");
 
     var duration = DateTime.UtcNow - startTime;
-var result = new DatabaseOperationResult
-          {
-         Success = true,
-          Message = "Database deleted successfully",
-      Duration = duration
-       };
+        var operationResult = new DatabaseOperationResult
+    {
+   Success = true,
+  Message = "Database deleted successfully",
+         Duration = duration
+   };
 
-            _logger.LogWarning("Database deletion completed in {Duration:hh\\:mm\\:ss}", duration);
+    _logger.LogWarning("Database deletion completed in {Duration:hh\\:mm\\:ss}", duration);
 
-         await _auditLogger.LogDatabaseOperationAsync(
-         operationType: "Delete",
-               success: true,
-   duration: duration);
+     await _auditLogger.LogDatabaseOperationAsync(
+        operationType: "Delete",
+          success: true,
+          duration: duration);
 
-             return result;
-            }
-  catch (InvalidOperationException ex)
-       {
-       var duration = DateTime.UtcNow - startTime;
-      await _auditLogger.LogDatabaseOperationAsync(
-         operationType: "Delete",
-     success: false,
-    duration: duration,
-        details: new Dictionary<string, object> { { "error", ex.Message } });
-   throw;
-   }
-            catch (Exception ex)
-          {
-        var duration = DateTime.UtcNow - startTime;
-       _logger.LogError(ex, "Database deletion failed");
-await _auditLogger.LogDatabaseOperationAsync(
-           operationType: "Delete",
+return operationResult;
+        }
+     catch (InvalidOperationException ex)
+ {
+   var duration = DateTime.UtcNow - startTime;
+        await _auditLogger.LogDatabaseOperationAsync(
+      operationType: "Delete",
           success: false,
-     duration: duration,
-        details: new Dictionary<string, object> { { "error", ex.Message } });
+duration: duration,
+details: new Dictionary<string, object> { { "error", ex.Message } });
+ throw;
+    }
+       catch (Exception ex)
+     {
+      var duration = DateTime.UtcNow - startTime;
+    _logger.LogError(ex, "Database deletion failed");
+     await _auditLogger.LogDatabaseOperationAsync(
+    operationType: "Delete",
+     success: false,
+   duration: duration,
+details: new Dictionary<string, object> { { "error", ex.Message } });
 
-    return new DatabaseOperationResult
-        {
-          Success = false,
-      Message = "Database deletion failed",
-      Duration = duration,
-      Error = ex.Message
-          };
-            }
+     return new DatabaseOperationResult
+    {
+ Success = false,
+         Message = "Database deletion failed",
+    Duration = duration,
+ Error = ex.Message
+    };
+   }
         }
 
         /// <summary>
@@ -291,64 +316,69 @@ await _auditLogger.LogDatabaseOperationAsync(
       /// </summary>
         public async Task<DatabaseOperationResult> SeedDataAsync()
         {
-      var startTime = DateTime.UtcNow;
+        var startTime = DateTime.UtcNow;
 
-            try
-        {
-                _logger.LogInformation("Beginning seed data insertion");
+      try
+  {
+     _logger.LogInformation("Beginning seed data insertion");
 
-       // TODO: Use SQL MCP when available
-                // var result = await _sqlMcpClient.ExecuteScriptAsync(_seedDataScriptPath, ...);
+   // Execute seed data script via SQL MCP
+      var result = await _sqlMcpClient.ExecuteScriptAsync(
+    _seedDataScriptPath,
+         new SqlMcpExecutionOptions { TimeoutSeconds = 30 });
 
-          await SimulateScriptExecutionAsync(_seedDataScriptPath, 2500);
-
-var duration = DateTime.UtcNow - startTime;
-     var result = new DatabaseOperationResult
-     {
-        Success = true,
-        Message = "Seed data inserted successfully",
-      Duration = duration,
-        RecordCounts = new Dictionary<string, int>
-         {
-                   { "Cases", 2 },
-        { "Persons", 10 },
-          { "Locations", 6 },
-      { "BadgeAccess", 52 },
-            { "ParkingLotAccess", 28 },
-      { "StorySteps", 4 },
-      { "AnswerKeys", 4 }
-     }
-         };
-
-                _logger.LogInformation("Seed data insertion completed in {Duration:hh\\:mm\\:ss}", duration);
-
-   await _auditLogger.LogDatabaseOperationAsync(
-      operationType: "Seed",
-           success: true,
-           duration: duration,
-              details: new Dictionary<string, object> { { "RecordsInserted", 106 } });
-
-     return result;
- }
- catch (Exception ex)
+    if (!result.Success)
       {
-  var duration = DateTime.UtcNow - startTime;
-           _logger.LogError(ex, "Seed data insertion failed");
-                await _auditLogger.LogDatabaseOperationAsync(
-          operationType: "Seed",
-          success: false,
-    duration: duration,
-        details: new Dictionary<string, object> { { "error", ex.Message } });
-
-         return new DatabaseOperationResult
-    {
-     Success = false,
-            Message = "Seed data insertion failed",
-         Duration = duration,
-               Error = ex.Message
-                };
+       throw new InvalidOperationException($"Seed data insertion failed: {result.ErrorMessage}");
   }
-        }
+
+  var duration = DateTime.UtcNow - startTime;
+       var operationResult = new DatabaseOperationResult
+       {
+   Success = true,
+      Message = "Seed data inserted successfully",
+       Duration = duration,
+   RecordCounts = new Dictionary<string, int>
+ {
+  { "Cases", 2 },
+     { "Persons", 10 },
+       { "Locations", 6 },
+   { "BadgeAccess", 52 },
+   { "ParkingLotAccess", 28 },
+    { "StorySteps", 4 },
+       { "AnswerKeys", 4 }
+   }
+            };
+
+               _logger.LogInformation("Seed data insertion completed in {Duration:hh\\:mm\\:ss}", duration);
+
+     await _auditLogger.LogDatabaseOperationAsync(
+    operationType: "Seed",
+ success: true,
+    duration: duration,
+     details: new Dictionary<string, object> { { "RecordsInserted", 106 } });
+
+      return operationResult;
+  }
+      catch (Exception ex)
+           {
+  var duration = DateTime.UtcNow - startTime;
+       _logger.LogError(ex, "Seed data insertion failed");
+        await _auditLogger.LogDatabaseOperationAsync(
+        operationType: "Seed",
+      success: false,
+   duration: duration,
+ details: new Dictionary<string, object> { { "error", ex.Message } });
+
+       return new DatabaseOperationResult
+{
+  Success = false,
+  Message = "Seed data insertion failed",
+       Duration = duration,
+  Error = ex.Message
+};
+  }
+  }
 
  /// <summary>
         /// Checks if database is initialized
@@ -428,35 +458,26 @@ var duration = DateTime.UtcNow - startTime;
         {
     _logger.LogWarning("Confirmation token validation failed: empty token");
  return false;
-            }
+}
 
             if (!_confirmationTokens.TryGetValue(token, out var expiryTime))
-            {
-          _logger.LogWarning("Confirmation token validation failed: token not found");
-           return false;
-            }
-
-            if (DateTime.UtcNow > expiryTime)
-   {
-          _logger.LogWarning("Confirmation token validation failed: token expired");
-                _confirmationTokens.Remove(token);
-          return false;
-         }
-
-            // Token is valid and not expired - remove it (single-use)
-      _confirmationTokens.Remove(token);
-
-  _logger.LogDebug("Confirmation token validated successfully");
-       return true;
+          {
+              _logger.LogWarning("Confirmation token validation failed: token not found");
+                return false;
         }
 
-        /// <summary>
-        /// Placeholder for script execution until SQL MCP is available
-    /// </summary>
-   private Task SimulateScriptExecutionAsync(string scriptPath, int delayMs)
-        {
-    _logger.LogDebug("PLACEHOLDER: Simulating script execution for {Script} ({DelayMs}ms)", scriptPath, delayMs);
-      return Task.Delay(delayMs);
+          if (DateTime.UtcNow > expiryTime)
+  {
+             _logger.LogWarning("Confirmation token validation failed: token expired");
+        _confirmationTokens.Remove(token);
+           return false;
+     }
+
+            // Token is valid and not expired - remove it (single-use)
+            _confirmationTokens.Remove(token);
+
+      _logger.LogDebug("Confirmation token validated successfully");
+     return true;
         }
     }
 }
