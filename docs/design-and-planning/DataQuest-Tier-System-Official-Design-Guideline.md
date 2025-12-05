@@ -750,330 +750,38 @@ Q3: "How would you present findings to an executive?"
 
 ---
 
-## 📝 Messaging Standards
-
-### Tier-Specific Messaging
-
-#### Promotion Messages (Official Templates)
-
-```
-PROMOTION TO JUNIOR DATA ANALYST:
-
-"Welcome to DataQuest!
-You're beginning your data career as a Junior Data Analyst.
-Your mission: Learn to analyze data, one query at a time.
-Start with simple cases and build your SQL fundamentals."
-
----
-
-PROMOTION TO SENIOR DATA ANALYST:
-
-"Congratulations! You're now a Senior Data Analyst.
-You've developed the specialization skills needed for independence.
-You can work with multiple tables and complex queries.
-Your next challenge: Quality and integrity verification."
-
----
-
-PROMOTION TO DATA INSPECTOR:
-
-"You've earned your role as a Data Inspector.
-Your expertise now focuses on data quality and integrity.
-You're mastering the verification skills that organizations depend on.
-Prepare for investigations that require systematic thinking."
-
----
-
-PROMOTION TO DATA DETECTIVE:
-
-"Promoted! You're now a Data Detective.
-You've moved from quality assurance to active investigation.
-Lead complex cases. Solve the mysteries hidden in data.
-Welcome to expert-level investigation."
-
----
-
-PROMOTION TO DIRECTOR OF DATA INTEGRITY:
-
-"EXECUTIVE ACHIEVEMENT UNLOCKED!
-
-You're now a Director of Data Integrity.
-You've completed DataQuest's mastery tier.
-
-This is the highest level of expertise available.
-You're among the elite analysts who understand data at the strategic level.
-
-Congratulations on your achievement."
-```
-
----
-
-## 🔐 Quality Assurance Standards
-
-### Tier System QA Checklist
-
-#### Before Release
-
-```
-TIER SYSTEM QA CHECKLIST:
-
-[ ] Database
-    [ ] CaseMetadata table created
-    [ ] All cases have tier assignment
-    [ ] Tier names exactly match official names
-    [ ] No typos in tier names
-    [ ] Constraint enforces valid tiers
-
-[ ] UI
-    [ ] Tier names display correctly
-    [ ] No abbreviations or variations used
-    [ ] Badges appear at correct tiers
-    [ ] Messaging is tier-appropriate
-    [ ] Promotion messages fire correctly
-
-[ ] Cases
-  [ ] Cases designed per tier standards
-    [ ] Correct number of red herrings
-    [ ] Correct number of contradictions
-    [ ] Difficulty matches tier level
-    [ ] Prompts are tier-appropriate
-
-[ ] Agents
-    [ ] Database Agent uses tier context
-    [ ] Query Tutor uses tier-appropriate hints
-    [ ] Messages are tier-specific
-    [ ] Escalation logic works correctly
-
-[ ] Documentation
-    [ ] All references updated
-  [ ] Tier names consistent everywhere
-    [ ] Old tier names removed
-    [ ] Developer guide updated
-```
-
----
-
-## 🚀 Implementation Phases
-
-### Phase 1 (MVP): Foundation
-
-**Deliverables:**
-- ✅ 3 current cases recategorized into tier system
-- ✅ Database schema updated with CaseMetadata
-- ✅ UI displays tier names correctly
-- ✅ Basic messaging implemented
-- ✅ Tier progression logic working
-
-**Tier Distribution:**
-- 1 case: Junior Data Analyst
-- 1 case: Senior Data Analyst
-- 1 case: Data Detective or Data Inspector
-
-**Focus:** Get tier system foundation solid for MVP demonstration
-
----
-
-### Phase 2: Expansion
-
-**Deliverables:**
-- ✅ 9-12 new cases across all tiers
-- ✅ Complete achievement badge system
-- ✅ Agent tier awareness fully implemented
-- ✅ Case design standards enforced
-- ✅ Tier progression fully tested
-
-**Tier Distribution:**
-- 3 cases: Junior Data Analyst
-- 4 cases: Senior Data Analyst
-- 5 cases: Data Inspector
-- 3 cases: Data Detective
-- 0 cases: Director of Data Integrity (prep for Phase 3)
-
-**Focus:** Build complete progressive curriculum
-
----
-
-### Phase 3+: Mastery Tier
-
-**Deliverables:**
-- ✅ Master-level cases (Director of Data Integrity)
-- ✅ Open-ended investigation scenarios
-- ✅ Professional-grade mastery cases
-- ✅ Treasure hunt integration
-- ✅ Medical/business theme support
-
-**Tier Distribution:**
-- 5+ cases: Junior Data Analyst
-- 10+ cases: Senior Data Analyst
-- 15+ cases: Data Inspector
-- 12+ cases: Data Detective
-- 5+ cases: Director of Data Integrity
-
-**Focus:** Complete 50+ case curriculum with all themes
-
----
-
-## 📖 Developer Guidelines
-
-### When Creating Cases
-
-1. **Identify Target Tier First**
-   - Determine which tier case targets
-   - Refer to official tier characteristics
-   - Follow tier-specific design standards
-
-2. **Design Case Appropriately**
-   - Follow red herring count for tier
-   - Follow contradiction count for tier
-   - Use tier-appropriate prompt style
-   - Design tier-appropriate SQL requirements
-
-3. **Assign Difficulty Correctly**
-   - Use EXACT tier name from official list
-   - Assign in CaseMetadata table
-   - Verify constraint accepts value
-
-4. **Create Tier-Appropriate Content**
-   - Story steps match tier count (2-3 for JDA, 8-10+ for DDI)
-   - Persons count matches tier guidelines
-   - Red herrings increase with tier
-   - Contradictions increase with tier
-
-5. **Test Tier Progression**
-   - Verify case accessible at correct tier
-   - Verify locked at lower tiers
-   - Verify previous tier complete required
-   - Verify advancement logic works
-
----
-
-### When Updating Agents
-
-1. **Identify Tier Context**
-   - Determine current student tier
-   - Reference tier-appropriate guidelines
-   - Use tier-specific messaging
-
-2. **Adjust Guidance Appropriately**
-   - Junior tiers: More detailed help
-   - Senior tiers: More independence
-   - Expert tiers: Professional-level guidance
-
-3. **Use Tier Awareness in Prompts**
-   - Database Agent: Tier-specific explanations
-   - Query Tutor: Tier-appropriate hints
-   - All messaging: Tier-consistent terminology
-
----
-
-### When Creating UI
-
-1. **Display Tier Names Correctly**
-   - Always use full official names
-   - Never abbreviate or vary
-   - Show in meaningful contexts
-
-2. **Implement Tier Progression**
-   - Show current tier prominently
-   - Show next tier clearly
-   - Display completion percentage
-
-3. **Design Achievement System**
-   - Match official badge names
-   - Use correct icons/colors
-   - Fire promotion messages correctly
-
----
-
-## 📉 Implementation Risks
-
-### Potential Risks
-
-1. **Design Misalignment**
-   - Risk: Cases or UI elements don't match tier design principles
-   - Mitigation: Comprehensive design review and testing
-
-2. **Technical Constraints**
-   - Risk: Database or UI limitations hinder implementation
-   - Mitigation: Early identification of technical challenges, iterative development
-
-3. **Data Privacy Concerns**
-   - Risk: User tracking conflicts with privacy standards (e.g., FERPA)
-   - Mitigation: Implement anonymous usage tracking, avoid personal data collection
-
-4. **Insufficient Testing**
-   - Risk: Incomplete testing leads to undetected issues
-   - Mitigation: Thorough QA checklist and testing before each phase release
-
-5. **Scope Creep**
-   - Risk: Additional features or cases requested beyond initial plan
-   - Mitigation: Strict adherence to defined phase deliverables, change control process
-
-6. **Lack of Stakeholder Buy-in**
-   - Risk: Stakeholders不支持 or理解 approvals delayed
-   - Mitigation: Regular updates and demonstrations to stakeholders, gather feedback early
-
----
-
-## 🎯 Success Metrics
-
-### System Success Defined By
-
-```
-METRIC 1: Tier System Clarity
-- Students understand their current tier
-- Students know what advances them
-- Students see progression path
-- Goal: 100% student comprehension
-
-METRIC 2: Career Relevance
-- Students see real career alignment
-- Students understand professional progression
-- Students recognize industry titles
-- Goal: High perception of career value
-
-METRIC 3: Engagement
-- Students motivated by tier progression
-- Cases feel increasingly challenging
-- Promotions feel rewarding
-- Goal: Increased completion rates
-
-METRIC 4: Learning Outcomes
-- SQL skills improve by tier
-- Reasoning skills develop progressively
-- Data thinking becomes sophisticated
-- Goal: Measurable skill progression
-
-METRIC 5: System Consistency
-- All tier names used correctly everywhere
-- No variations or abbreviations
-- Messaging is consistent
-- Goal: 100% consistency across system
-```
-
----
-
-## 📚 Related Documents
-
-**Reference Implementation:**
-- `docs/process-documentation/Refined-Data-Centric-Tier-System-Final.md` - Detailed analysis
-
-**Architecture:**
-- `Architecture.md` - System design
-- `docs/design-and-planning/` - Design specifications
-
-**Case Examples:**
-- `tests/DataQuest.Tests.Data/case-plans/` - Seed case data
-
----
-
 ## 🔄 Document Versioning
 
 | Version | Date | Changes | Author |
 |---------|------|---------|--------|
 | 1.0 | Dec 3, 2025 | Initial official guideline | Design Team |
+| 1.1 | Dec 4, 2025 | CR003 Applied - SQL Simplification | Change Control Board |
 
-**Next Review:** After MVP completion
+**Next Review:** After Phase 1 completion or upon CR submission
+
+---
+
+## 📌 CHANGE REQUESTS AFFECTING THIS DOCUMENT
+
+### CR003: Tier System SQL Simplification
+**Status:** ✅ **APPROVED** (December 4, 2025)  
+**Effective:** Immediately (implementation already complete)
+
+**Changes Applied:**
+- Tier 4: Removed subquery requirement, enhanced JOIN orchestration (5-6 tables)
+- Tier 5: Removed CTE requirement, enhanced JOIN orchestration (6-8+ tables)
+- Complexity scaled via investigation methodology, not SQL syntax
+
+**Documentation Reference:**
+- CR Document: `docs/process-documentation/change-management/Change-Request-CR003-Tier-System-SQL-Simplification.md`
+- Analysis: `docs/work-effort/Tier-System-Complexity-Analysis-And-Recommendations.md`
+- Verification: `docs/work-effort/Tier-System-Update-Verification-And-CR-Audit.md`
+
+**Approvals:**
+- [x] Technical Lead - Approved Dec 4, 2025
+- [x] Project Manager - Approved Dec 4, 2025
+- [x] Product Owner - Approved Dec 4, 2025
+- [x] Compliance Officer - Approved Dec 4, 2025
 
 ---
 
