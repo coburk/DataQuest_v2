@@ -195,13 +195,13 @@ Senior specialist with expert-level pattern finding, mystery solving, and comple
 **Role Narrative:** "I'm solving mysteries hidden in data"
 
 **Student Competencies:**
-- Writes complex JOINs with sophisticated logic (4-5 tables)
-- Constructs subqueries for advanced filtering
-- Uses CASE statements for conditional logic
-- Synthesizes findings from multiple sources
-- Identifies and isolates true signal from noise
-- Interprets ambiguous data patterns
-- Leads complex multi-step investigations
+- Orchestrates complex multi-table JOINs (5-6 tables) with sophisticated logic
+- Correlates data across multiple sources to find patterns
+- Uses CASE statements for conditional analysis and logic
+- Synthesizes findings from multiple correlated sources
+- Identifies and isolates true signal from noise in complex datasets
+- Interprets ambiguous data patterns and edge cases
+- Leads complex multi-step investigations systematically
 
 **Case Characteristics:**
 - Story Steps: 6-8
@@ -212,16 +212,16 @@ Senior specialist with expert-level pattern finding, mystery solving, and comple
 - Contradictions: 3-5
 - Red Herrings: 3-6
 - Duration: 35-50 minutes
-- SQL Focus: Complex JOINs, subqueries, sophisticated reasoning, advanced WHERE logic
+- SQL Focus: Complex multi-table JOINs (5-6 tables), CASE statements, sophisticated WHERE logic, correlation patterns
 - Difficulty: ⭐⭐⭐⭐ (high)
 
 **Promotion Criteria:**
 - Complete all 6-8 Data Detective cases
-- Demonstrate sophisticated query construction
+- Demonstrate sophisticated multi-table JOIN construction across 5-6 tables
 - Navigate multiple layers of red herrings
 - Resolve cascading contradictions
-- Synthesize complex findings
-- Show strategic investigation thinking
+- Synthesize complex findings from numerous correlated sources
+- Show strategic investigation thinking and data interpretation
 
 **Brand Message:**
 ```
@@ -238,7 +238,7 @@ Lead complex cases. Solve the mysteries hidden in data."
 #### TIER 5: Director of Data Integrity (Executive/Strategic Oversight)
 
 **Official Definition:**
-Executive-level leadership position with strategic oversight of organizational data integrity. Synthesizes complex findings, handles ambiguous data, and makes executive-level strategic decisions.
+Executive-level leadership position with strategic oversight of organizational data integrity. Synthesizes complex findings, handles ambiguous data, and makes executive-level strategic decisions based on nuanced analysis.
 
 **Career Stage:** 10+ years experience (equivalent)  
 **Responsibility Level:** Organizational data integrity strategy  
@@ -246,13 +246,13 @@ Executive-level leadership position with strategic oversight of organizational d
 **Role Narrative:** "I'm leading organizational data strategy"
 
 **Student Competencies:**
-- Writes expert-level SQL queries (5-6+ tables)
-- Constructs advanced CTEs for complex logic
-- Handles truly ambiguous data professionally
-- Synthesizes findings into executive recommendations
-- Recognizes multiple valid interpretations
-- Makes strategic judgments with incomplete data
-- Demonstrates professional-grade SQL mastery
+- Orchestrates expert-level multi-table JOINs (6-8+ tables) with sophisticated correlation logic
+- Synthesizes complex findings across numerous data sources into executive recommendations
+- Handles genuinely ambiguous and contradictory data professionally
+- Makes strategic judgments and recommendations with incomplete or ambiguous data
+- Recognizes multiple valid interpretations and explains trade-offs
+- Performs professional-grade SQL analysis through sophisticated JOIN patterns and data synthesis
+- Leads organizational data integrity strategy with nuanced understanding
 
 **Case Characteristics:**
 - Story Steps: 8-10+
@@ -260,34 +260,28 @@ Executive-level leadership position with strategic oversight of organizational d
 - Evidence Items: 12-20
 - Relationships: 8-12
 - Transaction Logs: 20-30+
-- Contradictions: 4-6
+- Contradictions: 4-6 (some genuinely ambiguous)
 - Red Herrings: 4-8+
 - Duration: 60-90+ minutes
-- SQL Focus: Expert synthesis, ambiguous data handling, CTEs, advanced patterns
+- SQL Focus: Expert-level multi-table orchestration (6-8+ tables), sophisticated synthesis, complex correlation patterns, ambiguous data handling
 - Difficulty: ⭐⭐⭐⭐⭐ (expert/master)
 
 **Promotion Criteria:**
 - Complete all 5-8 Director of Data Integrity cases
-- Demonstrate expert-level query sophistication
-- Navigate extremely complex investigations
-- Handle genuinely ambiguous evidence professionally
+- Demonstrate expert-level multi-table JOIN orchestration across 6-8+ tables
+- Navigate extremely complex investigations with high ambiguity
+- Handle genuinely ambiguous evidence professionally and document reasoning
 - Make strategic judgments under uncertainty
-- Achieve near-professional SQL mastery
+- Achieve near-professional SQL mastery through sophisticated JOIN and data correlation skills
 
 **Brand Message:**
 ```
-"EXECUTIVE ACHIEVEMENT UNLOCKED!
-
-You're now a Director of Data Integrity.
-You've completed DataQuest's mastery tier.
-
-This is the highest level of expertise available.
-You're among the elite analysts who understand data at the strategic level.
-
-Congratulations on your achievement."
+"Congratulations! You've achieved Director of Data Integrity status.
+You've mastered the complex art of finding truth in ambiguous data.
+You're ready to lead organizational data strategy."
 ```
 
-**Achievement Badge:** Diamond tier (highest)  
+**Achievement Badge:** Diamond tier  
 **Title Usage:** "Your Role: Director of Data Integrity"
 
 ---
