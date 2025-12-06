@@ -1,19 +1,24 @@
 # 📅 Daily Work Logs
 
-This folder contains daily work effort summaries, session logs, and daily progress tracking for the DataQuest: SQL Detective project.
+This folder contains daily work effort summaries organized into weekly folders that contain session logs, and daily progress tracking for the DataQuest: SQL Detective project.
 
 ## 📂 File Organization
 
-### File Naming Convention
-**Format:** `YYYYMMDD-[Type]-[Descriptor].md`
+### Naming Convention
+
+**Folder Format: `week-ending-YYYY-MM-DD`**
+
+**File Format:** `YYYY-MM-DD-[Type]-[Descriptor].md`
 
 **Examples:**
+
 - `20251204-Daily-Effort-Summary.md`
 - `20251204-Session-Summary.md`
 - `20251204-Development-Log.md`
 - `20251203-Work-Log.md`
 
 ### Breakdown by Date
+
 - One primary daily summary per day
 - Supporting files for specific sessions or activities
 - Chronological organization (easiest to find recent logs)
@@ -64,9 +69,11 @@ Additional context or observations
 ## 📊 Log Types
 
 ### Daily Effort Summaries
+
 **Purpose:** Track daily work completed
 
 **Includes:**
+
 - Work completed
 - Time tracked
 - Documents created/updated
@@ -74,6 +81,7 @@ Additional context or observations
 - Blockers encountered
 
 **Examples:**
+
 - `20251204-Daily-Effort-Summary.md`
 
 **Retention:** All logs kept
@@ -81,9 +89,11 @@ Additional context or observations
 ---
 
 ### Session Summaries
+
 **Purpose:** Track specific work sessions or meetings
 
 **Includes:**
+
 - Session topic
 - Participants
 - Decisions made
@@ -91,6 +101,7 @@ Additional context or observations
 - Outcomes
 
 **Examples:**
+
 - `20251204-Executive-Session-Summary.md`
 - `20251204-Compliance-Review-Session.md`
 
@@ -99,15 +110,18 @@ Additional context or observations
 ---
 
 ### Work Logs / Execution Logs
+
 **Purpose:** Detailed tracking of specific work streams
 
 **Includes:**
+
 - Specific tasks completed
 - Technical decisions
 - Implementation details
 - Problems encountered and solutions
 
 **Examples:**
+
 - `20251204-Development-Log.md`
 - `20251204-Evaluation-Execution-Log.md`
 
@@ -118,6 +132,7 @@ Additional context or observations
 ## 🔍 How to Find Logs
 
 ### By Date
+
 ```
 1. Look for YYYYMMDD- prefix
 2. Sort by date to find recent entries
@@ -125,6 +140,7 @@ Additional context or observations
 ```
 
 ### By Type
+
 ```
 1. Search for: Daily-Effort-Summary
    → Find daily work tracking
@@ -137,6 +153,7 @@ Additional context or observations
 ```
 
 ### By Topic
+
 ```
 Use grep or IDE search:
 grep "Compliance" 202512*.md
@@ -149,6 +166,7 @@ grep "Development" 202512*.md
 ## 📈 What to Track
 
 ### Daily Summaries Should Include:
+
 - ✅ Work completed with detail
 - ✅ Documents created/updated
 - ✅ Code committed
@@ -157,6 +175,7 @@ grep "Development" 202512*.md
 - ✅ Next day priorities
 
 ### Session Summaries Should Include:
+
 - ✅ Who participated
 - ✅ What was discussed
 - ✅ Decisions made
@@ -164,6 +183,7 @@ grep "Development" 202512*.md
 - ✅ Timeline for next steps
 
 ### Execution Logs Should Include:
+
 - ✅ Specific tasks performed
 - ✅ Technical details
 - ✅ Problems solved
@@ -175,6 +195,7 @@ grep "Development" 202512*.md
 ## 🔗 Relationship to Other Folders
 
 **These daily logs feed into:**
+
 - `docs/analysis/summaries/` - Phase completions, milestones
 - `docs/compliance/` - Status updates for compliance reviews
 - `docs/process-documentation/` - Change tracking and governance
@@ -185,6 +206,7 @@ grep "Development" 202512*.md
 ## 📊 Metrics Tracking
 
 ### Common Metrics to Track:
+
 - [ ] Hours worked
 - [ ] Documents created
 - [ ] Documents updated
@@ -195,7 +217,9 @@ grep "Development" 202512*.md
 - [ ] Deliverables completed
 
 ### Monthly Metrics Summary
+
 At end of each month, consider creating:
+
 - `20251231-December-Summary.md`
 - Track cumulative: hours, documents, commits
 - Summarize key accomplishments
@@ -206,15 +230,18 @@ At end of each month, consider creating:
 ## 📅 Archival Strategy
 
 ### Current Month
+
 - All daily logs remain in `daily-logs/`
 - Easy access and frequent review
 
 ### Previous Months
+
 - After 1-3 months: Move to archive (optional)
 - Before archiving: Create monthly summary
 - Archive location: `daily-logs/archive/YYYY-MM/`
 
 ### Retention Policy
+
 - Keep all logs for current year (minimum)
 - Archive previous year after review
 - Consider 3-5 year retention for compliance
@@ -224,24 +251,28 @@ At end of each month, consider creating:
 ## 📝 Best Practices
 
 ### Consistency
+
 - [ ] Create one summary per day worked
 - [ ] Use consistent format
 - [ ] Complete at end of day (or next morning)
 - [ ] Keep factual and objective
 
 ### Completeness
+
 - [ ] Document what was actually done
 - [ ] Include blockers and issues
 - [ ] Track time accurately
 - [ ] Note decisions made
 
 ### Clarity
+
 - [ ] Use clear, concise language
 - [ ] Organize information logically
 - [ ] Use bullet points for readability
 - [ ] Include metrics and KPIs
 
 ### Timeliness
+
 - [ ] Complete same day or next day
 - [ ] Don't wait to "catch up"
 - [ ] Update if additional work completed
@@ -252,18 +283,21 @@ At end of each month, consider creating:
 ## 📞 Usage Guidelines
 
 ### For Project Manager
+
 - Review daily logs for progress tracking
 - Identify blockers early
 - Monitor team productivity
 - Create milestone summaries
 
 ### For Team Members
+
 - Update own logs at end of day
 - Document accomplishments
 - Note issues and blockers
 - Plan next day
 
 ### For Stakeholders
+
 - Review summaries for project status
 - Understand blockers and risks
 - See what's being accomplished
@@ -319,17 +353,18 @@ Completed folder reorganization setup and created README files for new documenta
 ## 📞 Contact
 
 **Daily Tracking Questions:**
+
 - Project Manager: [Email/Contact]
 - Team Lead: [Email/Contact]
 
 **Template Updates:**
+
 - Submit suggestions to: [Process]
 - Review frequency: [When updated]
 - Version control: [How tracked]
 
 ---
 
-**Last Updated:** December 4, 2025  
-**Folder Created:** December 4, 2025  
+**Last Updated:** December 4, 2025
+**Folder Created:** December 4, 2025
 **Maintained By:** Project Management Team
-
